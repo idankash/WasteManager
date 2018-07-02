@@ -1,5 +1,16 @@
 EntityTest/App.config
 EntityTest/bin/
-
+Backup/
+obj/
 EntityTest/obj/
 .vs/EntityTest/v14/.suo
+
+WasteSimulator/bin/
+WasteSimulator/obj/
+WasteSimulator/App.config
+DA/bin/
+DA/obj/
+DA/App.config
+BL/bin/
+BL/obj/
+BL/App.config
