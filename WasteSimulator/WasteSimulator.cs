@@ -42,8 +42,7 @@ namespace WasteSimulator
             }
             catch(Exception ex)
             {
-                ErrorHandler.Handle(ex, this);
-                return null;
+                throw ErrorHandler.Handle(ex, this);
             }
         }
 

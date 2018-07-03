@@ -8,6 +8,7 @@ namespace FND
 {
     public static class ErrorHandler
     {
+        // Wrapps the logger for catch blocks only
         public static Exception Handle(Exception ex, object sender)
         {
             Logger.Instance.WriteError(ex, sender);

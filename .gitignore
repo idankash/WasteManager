@@ -17,3 +17,6 @@ BL/App.config
 FND/bin/
 FND/obj/
 .vs/
+WasteManagerWebApi/bin/
+WasteManagerWebApi/obj/
+WasteManagerWebApi/Web.config

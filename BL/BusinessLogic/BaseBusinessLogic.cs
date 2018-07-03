@@ -61,7 +61,6 @@ namespace BL
 
 
 ///**
-
 //    // in trucklogic:
 
 //    using ( Trucklogic trucklogic = new Trucklogic())       // This is a regular BL - use the 1st ctor

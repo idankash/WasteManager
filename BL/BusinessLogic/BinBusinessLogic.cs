@@ -46,6 +46,7 @@ namespace BL
 
         }
 
+        // TODO - Refactor method name
         private void InsertInfoToBinLog(Bin updatedBin, DateTime dt)
         {
             // TODO: Think about moving the code below into a class ... :S
@@ -68,10 +69,8 @@ namespace BL
         }
 
 
-        public void Dispose()
-        {
-            this.db.Dispose();
-        }
+
+
 
         // TRUCK - CRUD 
 
