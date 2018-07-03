@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BL;
 using DAL;
+using FND;
 
 namespace WasteSimulator
 {
@@ -35,12 +36,13 @@ namespace WasteSimulator
                 using(BusinessLogic bl = new BusinessLogic())
                 {
                     List<Bin> bins = bl.GetAllBins();
+                    FillAllBinsRandomly();
                     return bins;
                 }
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Instance.WriteError(ex, this);
                 return null;
             }
         }
@@ -49,6 +51,7 @@ namespace WasteSimulator
         {
             while ((Convert.ToBoolean(SourceDateTime.Date.CompareTo(DestinationDateTime.Date))))
             {
+                Logger.Instance.WriteInfo("Current date " + SourceDateTime.ToString(), this);
                 using (BusinessLogic bl = new BusinessLogic())
                 {
                     List<Bin> binList = bl.GetAllBins();
