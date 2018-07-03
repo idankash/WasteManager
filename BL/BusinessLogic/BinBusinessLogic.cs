@@ -5,11 +5,9 @@ using System.Linq;
 
 namespace BL
 {
-    public class WasteBusinessLogic : IDisposable
+    public class BinBusinessLogic : BaseBusinessLogic
     {
-        private WasteManagerEntities db;
-
-        public WasteBusinessLogic()
+        public BinBusinessLogic()
         {
             this.db = new WasteManagerEntities();
         }
@@ -34,7 +32,7 @@ namespace BL
             return newBin;
         }
 
-        public void UpdateBin(Bin updatedBin,DateTime dt)
+        public void UpdateBin(Bin updatedBin, DateTime dt)
         {
             Bin oldBin = this.db.Bins.Where(x => x.BinId == updatedBin.BinId).SingleOrDefault();
             if (oldBin != null)
@@ -45,10 +43,10 @@ namespace BL
                 InsertInfoToBinLog(updatedBin, dt);
             }
             this.db.SaveChanges();
-            
+
         }
 
-        private void InsertInfoToBinLog(Bin updatedBin,DateTime dt)
+        private void InsertInfoToBinLog(Bin updatedBin, DateTime dt)
         {
             // TODO: Think about moving the code below into a class ... :S
 
@@ -56,7 +54,7 @@ namespace BL
             bLog.BinId = updatedBin.BinId;
             bLog.CurrentCapacity = updatedBin.CurrentCapacity;
             bLog.UpdateDate = dt;
-            
+
             db.BinLogs.Add(bLog);
 
             db.SaveChanges();
@@ -99,7 +97,7 @@ namespace BL
         {
             Truck truck = db.Trucks.Where(x => x.TruckId == updatedTruck.TruckId).SingleOrDefault();
 
-            if(truck != null)
+            if (truck != null)
             {
                 truck = updatedTruck;
             }
@@ -119,7 +117,7 @@ namespace BL
         {
             LUT_BinType bt = db.LUT_BinType.Where(x => x.BinTypeId == binTypeId).SingleOrDefault();
 
-            if(bt == null)
+            if (bt == null)
             {
                 throw new Exception();
             }

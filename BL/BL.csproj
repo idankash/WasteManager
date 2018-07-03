@@ -49,7 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BusinessLogic\BusinessLogic.cs" />
+    <Compile Include="BusinessLogic\BaseBusinessLogic.cs" />
+    <Compile Include="BusinessLogic\BinBusinessLogic.cs" />
+    <Compile Include="BusinessLogic\TruckBusinessLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -60,6 +62,10 @@
     <ProjectReference Include="..\DA\DA.csproj">
       <Project>{35597107-07ef-4604-be59-abb7c22cdbde}</Project>
       <Name>DA</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FND\FND.csproj">
+      <Project>{A5C228C9-FEB0-492E-87A5-A8D8B95006CF}</Project>
+      <Name>FND</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

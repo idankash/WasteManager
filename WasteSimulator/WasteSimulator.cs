@@ -33,7 +33,7 @@ namespace WasteSimulator
         {
             try
             {
-                using(BusinessLogic bl = new BusinessLogic())
+                using(BinBusinessLogic bl = new BinBusinessLogic())
                 {
                     List<Bin> bins = bl.GetAllBins();
                     FillAllBinsRandomly();
@@ -42,7 +42,7 @@ namespace WasteSimulator
             }
             catch(Exception ex)
             {
-                Logger.Instance.WriteError(ex, this);
+                ErrorHandler.Handle(ex, this);
                 return null;
             }
         }
@@ -52,7 +52,7 @@ namespace WasteSimulator
             while ((Convert.ToBoolean(SourceDateTime.Date.CompareTo(DestinationDateTime.Date))))
             {
                 Logger.Instance.WriteInfo("Current date " + SourceDateTime.ToString(), this);
-                using (BusinessLogic bl = new BusinessLogic())
+                using (BinBusinessLogic bl = new BinBusinessLogic())
                 {
                     List<Bin> binList = bl.GetAllBins();
                     
