@@ -1,4 +1,5 @@
 ﻿using DAL;
+using FND;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,12 +35,17 @@ namespace WasteSimulator
             }
             */
 
+            Logger.Instance.WriteInfo("before call sql server",null);
+
             WasteSimulator ws = new WasteSimulator(30);
 
             //ws.FillAllBinsRandomly();
             List<Bin> bins = ws.test();
 
-            foreach(Bin bin in bins)
+            
+            Logger.Instance.WriteInfo("after call sql server", null);
+
+            foreach (Bin bin in bins)
             {
                 Console.WriteLine(bin.BinId);
             }
