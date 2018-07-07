@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AtomicDataModels\BinData.cs" />
     <Compile Include="BusinessLogic\BaseBusinessLogic.cs" />
     <Compile Include="BusinessLogic\BinBusinessLogic.cs" />
     <Compile Include="BusinessLogic\TruckBusinessLogic.cs" />

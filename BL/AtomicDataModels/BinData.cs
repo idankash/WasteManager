@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace WasteManagerWebApi.Models
+namespace BL.AtomicDataModels
 {
     public class BinData
     {

@@ -7,27 +7,28 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using BL.AtomicDataModels;
 
 namespace WasteManagerWebApi.Controllers
 {
-    public class TestController : ApiController
+    public class TestController : BaseController
     {
-        //[HttpGet]
-        //public bool test()
-        //{
-        //    Logger.Instance.WriteInfo("test controller", this);
-        //    return true;
-        //}
+        [HttpGet]
+        public bool test()
+        {
+            Logger.Instance.WriteInfo("test controller", this);
+            return true;
+        }
 
         [HttpGet]
-        public List<Bin> GetAllBins()
+        public List<BinData> GetAllBins()
         {
-            List<Bin> bins = null;
+            List<BinData> bins = null;
             try
             {
                 using (BinBusinessLogic binBusinessLogic = new BinBusinessLogic())
                 {
-                    bins = binBusinessLogic.GetAllBins();
+                    bins = binBusinessLogic.GetAllBinsData();
                 }
 
                 return bins;

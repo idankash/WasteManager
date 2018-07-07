@@ -1,8 +1,11 @@
-﻿using DAL;
+﻿using BL.AtomicDataModels;
+using DAL;
 using FND;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 
 namespace BL
 {
@@ -14,6 +17,40 @@ namespace BL
         }
 
         //TODO - Implement Methods of GET/SET/UPDATE/DELETE things from the database
+
+        public List<BinData> GetAllBinsData()
+        {
+            List<Bin> dbBins = null;
+            List<BinData> bins = new List<BinData>();
+
+            try
+            {
+                dbBins =this.db.Bins.ToList();
+
+                foreach (Bin dbBin in dbBins)
+                {
+                    BinData binData = new BinData()
+                    {
+                        binId = dbBin.BinId,
+                        binTypeId = dbBin.BinTypeId,
+                        binTypeDesc = dbBin.LUT_BinType.BinTypeDesc,
+                        cityAddress = dbBin.CityAddress,
+                        currentCapacity = dbBin.CurrentCapacity,
+                        isInUser = dbBin.IsInUse,
+                        maxCapacity = dbBin.LUT_BinType.Capacity,
+                        streetAddress = dbBin.StreetAddress,
+                        streetNumber = dbBin.StreetNumber
+                    };
+
+                    bins.Add(binData);
+                }
+                return bins;
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
 
         public List<Bin> GetAllBins()
         {
