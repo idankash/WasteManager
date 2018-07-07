@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BL", "BL\BL.csproj", "{25D3D8D4-1F84-43A2-9206-FB033FC2BB23}"
 EndProject
@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DA", "DA\DA.csproj", "{3559
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FND", "FND\FND.csproj", "{A5C228C9-FEB0-492E-87A5-A8D8B95006CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WasteManagerWebApi", "WasteManagerWebApi\WasteManagerWebApi.csproj", "{FC5B06FB-77F8-49D8-9DB6-95558627DCCE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WasteManagerWebApi", "WasteManagerWebApi\WasteManagerWebApi.csproj", "{7D9216DB-5B83-4F81-B2DD-A3BB3BB4F468}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{A5C228C9-FEB0-492E-87A5-A8D8B95006CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5C228C9-FEB0-492E-87A5-A8D8B95006CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5C228C9-FEB0-492E-87A5-A8D8B95006CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FC5B06FB-77F8-49D8-9DB6-95558627DCCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC5B06FB-77F8-49D8-9DB6-95558627DCCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FC5B06FB-77F8-49D8-9DB6-95558627DCCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FC5B06FB-77F8-49D8-9DB6-95558627DCCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D9216DB-5B83-4F81-B2DD-A3BB3BB4F468}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D9216DB-5B83-4F81-B2DD-A3BB3BB4F468}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D9216DB-5B83-4F81-B2DD-A3BB3BB4F468}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D9216DB-5B83-4F81-B2DD-A3BB3BB4F468}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,10 +1,92 @@
 
-[2018-07-03 20:36:30,980] [INFO] - Test from HomeController
+[2018-07-07 15:25:32,650] [INFO] - test controller
 
-[2018-07-03 20:37:29,420] [INFO] - Test from HomeController
+[2018-07-07 15:33:55,119] [INFO] - test controller
 
-[2018-07-03 20:37:30,811] [INFO] - Test from HomeController
+[2018-07-07 15:34:21,364] [ERROR] - System.InvalidOperationException: No connection string named 'WasteManagerEntities' could be found in the application config file.
+   at System.Data.Entity.Internal.LazyInternalConnection.get_ConnectionHasModel()
+   at System.Data.Entity.Internal.LazyInternalContext.InitializeContext()
+   at System.Data.Entity.Internal.InternalContext.Initialize()
+   at System.Data.Entity.Internal.InternalContext.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(String sql, Object[] parameters)
+   at BL.BaseBusinessLogic..ctor() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\BL\BusinessLogic\BaseBusinessLogic.cs:line 25
+   at BL.BinBusinessLogic..ctor() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\BL\BusinessLogic\BinBusinessLogic.cs:line 10
+   at WasteManagerWebApi.Controllers.TestController.GetAllBins() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\WasteManagerWebApi\Controllers\TestController.cs:line 28
 
-[2018-07-03 20:37:31,003] [INFO] - Test from HomeController
+[2018-07-07 15:34:26,713] [ERROR] - System.InvalidOperationException: No connection string named 'WasteManagerEntities' could be found in the application config file.
+   at System.Data.Entity.Internal.LazyInternalConnection.get_ConnectionHasModel()
+   at System.Data.Entity.Internal.LazyInternalContext.InitializeContext()
+   at System.Data.Entity.Internal.InternalContext.Initialize()
+   at System.Data.Entity.Internal.InternalContext.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(String sql, Object[] parameters)
+   at BL.BaseBusinessLogic..ctor() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\BL\BusinessLogic\BaseBusinessLogic.cs:line 25
+   at BL.BinBusinessLogic..ctor() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\BL\BusinessLogic\BinBusinessLogic.cs:line 10
+   at WasteManagerWebApi.Controllers.TestController.GetAllBins() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\WasteManagerWebApi\Controllers\TestController.cs:line 28
 
-[2018-07-03 20:37:44,098] [INFO] - Test from HomeController
+[2018-07-07 15:34:58,796] [ERROR] - System.InvalidOperationException: No connection string named 'WasteManagerEntities' could be found in the application config file.
+   at System.Data.Entity.Internal.LazyInternalConnection.get_ConnectionHasModel()
+   at System.Data.Entity.Internal.LazyInternalContext.InitializeContext()
+   at System.Data.Entity.Internal.InternalContext.Initialize()
+   at System.Data.Entity.Internal.InternalContext.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(String sql, Object[] parameters)
+   at BL.BaseBusinessLogic..ctor() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\BL\BusinessLogic\BaseBusinessLogic.cs:line 25
+   at BL.BinBusinessLogic..ctor() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\BL\BusinessLogic\BinBusinessLogic.cs:line 10
+   at WasteManagerWebApi.Controllers.TestController.GetAllBins() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\WasteManagerWebApi\Controllers\TestController.cs:line 28
+
+[2018-07-07 15:36:19,909] [ERROR] - System.InvalidOperationException: No connection string named 'WasteManagerEntities' could be found in the application config file.
+   at System.Data.Entity.Internal.LazyInternalConnection.get_ConnectionHasModel()
+   at System.Data.Entity.Internal.LazyInternalContext.InitializeContext()
+   at System.Data.Entity.Internal.InternalContext.Initialize()
+   at System.Data.Entity.Internal.InternalContext.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(String sql, Object[] parameters)
+   at BL.BaseBusinessLogic..ctor() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\BL\BusinessLogic\BaseBusinessLogic.cs:line 25
+   at BL.BinBusinessLogic..ctor() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\BL\BusinessLogic\BinBusinessLogic.cs:line 10
+   at WasteManagerWebApi.Controllers.TestController.GetAllBins() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\WasteManagerWebApi\Controllers\TestController.cs:line 28
+
+[2018-07-07 15:36:22,691] [ERROR] - System.InvalidOperationException: No connection string named 'WasteManagerEntities' could be found in the application config file.
+   at System.Data.Entity.Internal.LazyInternalConnection.get_ConnectionHasModel()
+   at System.Data.Entity.Internal.LazyInternalContext.InitializeContext()
+   at System.Data.Entity.Internal.InternalContext.Initialize()
+   at System.Data.Entity.Internal.InternalContext.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(String sql, Object[] parameters)
+   at BL.BaseBusinessLogic..ctor() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\BL\BusinessLogic\BaseBusinessLogic.cs:line 25
+   at BL.BinBusinessLogic..ctor() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\BL\BusinessLogic\BinBusinessLogic.cs:line 10
+   at WasteManagerWebApi.Controllers.TestController.GetAllBins() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\WasteManagerWebApi\Controllers\TestController.cs:line 28
+
+[2018-07-07 15:36:25,872] [ERROR] - System.InvalidOperationException: No connection string named 'WasteManagerEntities' could be found in the application config file.
+   at System.Data.Entity.Internal.LazyInternalConnection.get_ConnectionHasModel()
+   at System.Data.Entity.Internal.LazyInternalContext.InitializeContext()
+   at System.Data.Entity.Internal.InternalContext.Initialize()
+   at System.Data.Entity.Internal.InternalContext.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(String sql, Object[] parameters)
+   at BL.BaseBusinessLogic..ctor() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\BL\BusinessLogic\BaseBusinessLogic.cs:line 25
+   at BL.BinBusinessLogic..ctor() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\BL\BusinessLogic\BinBusinessLogic.cs:line 10
+   at WasteManagerWebApi.Controllers.TestController.GetAllBins() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\WasteManagerWebApi\Controllers\TestController.cs:line 28
+
+[2018-07-07 15:36:26,313] [ERROR] - System.InvalidOperationException: No connection string named 'WasteManagerEntities' could be found in the application config file.
+   at System.Data.Entity.Internal.LazyInternalConnection.get_ConnectionHasModel()
+   at System.Data.Entity.Internal.LazyInternalContext.InitializeContext()
+   at System.Data.Entity.Internal.InternalContext.Initialize()
+   at System.Data.Entity.Internal.InternalContext.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(String sql, Object[] parameters)
+   at BL.BaseBusinessLogic..ctor() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\BL\BusinessLogic\BaseBusinessLogic.cs:line 25
+   at BL.BinBusinessLogic..ctor() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\BL\BusinessLogic\BinBusinessLogic.cs:line 10
+   at WasteManagerWebApi.Controllers.TestController.GetAllBins() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\WasteManagerWebApi\Controllers\TestController.cs:line 28
+
+[2018-07-07 15:36:26,761] [ERROR] - System.InvalidOperationException: No connection string named 'WasteManagerEntities' could be found in the application config file.
+   at System.Data.Entity.Internal.LazyInternalConnection.get_ConnectionHasModel()
+   at System.Data.Entity.Internal.LazyInternalContext.InitializeContext()
+   at System.Data.Entity.Internal.InternalContext.Initialize()
+   at System.Data.Entity.Internal.InternalContext.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(String sql, Object[] parameters)
+   at BL.BaseBusinessLogic..ctor() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\BL\BusinessLogic\BaseBusinessLogic.cs:line 25
+   at BL.BinBusinessLogic..ctor() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\BL\BusinessLogic\BinBusinessLogic.cs:line 10
+   at WasteManagerWebApi.Controllers.TestController.GetAllBins() in C:\Users\Lior\Documents\Visual Studio 2015\Projects\Waste\WasteManagerWebApi\Controllers\TestController.cs:line 28
