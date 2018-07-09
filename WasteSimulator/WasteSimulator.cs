@@ -48,17 +48,18 @@ namespace WasteSimulator
 
         public void FillAllBinsRandomly()
         {
+            List<Bin> binList;
+
             while ((Convert.ToBoolean(SourceDateTime.Date.CompareTo(DestinationDateTime.Date))))
             {
                 Logger.Instance.WriteInfo("Current date " + SourceDateTime.ToString(), this);
                 using (BinBusinessLogic bl = new BinBusinessLogic())
                 {
-                    List<Bin> binList = bl.GetAllBins();
-                    
+                    binList = bl.GetAllBins();
+
                     for (int i = 0; i < 12; i++)
                     {
                         // It means the client want to throw his garbage.. 
-
 
                         foreach (Bin bin in binList)
                         {
@@ -73,19 +74,11 @@ namespace WasteSimulator
 
                         SourceDateTime = SourceDateTime.AddHours(2);
                     }
-
-                    Truck truck = bl.GetTruck(1);
-
-                    foreach (Bin bin in binList)
-                    {
-                        truck.CurrentCapacity += bin.CurrentCapacity;
-                        bl.UpdateTruck(truck);
-
-                        bin.CurrentCapacity = 0;
-                        bl.UpdateBin(bin, SourceDateTime);
-                    }
                 }
-
+                using(TruckBusinessLogic truckBl = new TruckBusinessLogic())
+                {
+                    truckBl.ClearingBins(binList, 1, SourceDateTime);
+                }
             }
         }
     }

@@ -15,6 +15,11 @@ namespace BL
             this.db = new WasteManagerEntities();
         }
 
+        public TruckBusinessLogic(WasteManagerEntities db) : base(db)
+        {
+
+        }
+
         // TRUCK - CRUD 
 
         public List<Truck> GetAllTrucks()
@@ -84,6 +89,25 @@ namespace BL
             catch (Exception ex)
             {
                 throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
+        public void ClearingBins(List<Bin> binList, int truckId, DateTime currentDateTime)  //Go over all the bins and unloading them.
+        {
+            Truck truck = GetTruck(truckId);
+
+            foreach(Bin bin in binList)
+            {
+                truck.CurrentCapacity += bin.CurrentCapacity;
+                this.UpdateTruck(truck);
+
+                bin.CurrentCapacity = 0;
+                using (BinBusinessLogic binBl = new BinBusinessLogic(this.db))
+                {
+                    binBl.UpdateBin(bin, currentDateTime);
+
+                }
+
             }
         }
     }

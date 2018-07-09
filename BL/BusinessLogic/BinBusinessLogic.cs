@@ -16,6 +16,10 @@ namespace BL
             this.db = new WasteManagerEntities();
         }
 
+        public BinBusinessLogic(WasteManagerEntities db) : base(db)
+        {
+
+        }
         //TODO - Implement Methods of GET/SET/UPDATE/DELETE things from the database
 
         public List<BinData> GetAllBinsData()
