@@ -20,3 +20,5 @@ FND/obj/
 WasteManagerWebApi/bin/
 WasteManagerWebApi/obj/
 WasteManagerWebApi/Web.config
+
+*.log
