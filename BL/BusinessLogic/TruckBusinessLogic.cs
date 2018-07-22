@@ -30,6 +30,7 @@ namespace BL
             }
             catch (Exception ex)
             {
+                
                 throw ErrorHandler.Handle(ex, this);
             }
         }
@@ -96,7 +97,7 @@ namespace BL
         {
             Truck truck = GetTruck(truckId);
 
-            foreach(Bin bin in binList)
+            foreach (Bin bin in binList)
             {
                 truck.CurrentCapacity += bin.CurrentCapacity;
                 this.UpdateTruck(truck);

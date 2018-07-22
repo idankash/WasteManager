@@ -20,7 +20,6 @@ namespace BL
         {
 
         }
-        //TODO - Implement Methods of GET/SET/UPDATE/DELETE things from the database
 
         public List<BinData> GetAllBinsData()
         {
@@ -29,25 +28,13 @@ namespace BL
 
             try
             {
-                dbBins =this.db.Bins.ToList();
+                dbBins = this.db.Bins.ToList();
 
                 foreach (Bin dbBin in dbBins)
                 {
-                    BinData binData = new BinData()
-                    {
-                        binId = dbBin.BinId,
-                        binTypeId = dbBin.BinTypeId,
-                        binTypeDesc = dbBin.LUT_BinType.BinTypeDesc,
-                        cityAddress = dbBin.CityAddress,
-                        currentCapacity = dbBin.CurrentCapacity,
-                        isInUser = dbBin.IsInUse,
-                        maxCapacity = dbBin.LUT_BinType.Capacity,
-                        streetAddress = dbBin.StreetAddress,
-                        streetNumber = dbBin.StreetNumber
-                    };
-
-                    bins.Add(binData);
+                    bins.Add(transformToBinData(dbBin));
                 }
+
                 return bins;
             }
             catch (Exception ex)
@@ -80,6 +67,18 @@ namespace BL
             }
         }
 
+        public BinData GetBinData(int id)
+        {
+            Bin dbBin = GetBin(id);
+
+            return transformToBinData(dbBin);
+        }
+
+        public void AddNewBinData(BinData i_BinData)
+        {
+            AddNewBin(transformBinDataToBin(i_BinData));
+        }
+
         public Bin AddNewBin(Bin newBin)
         {
             try
@@ -95,38 +94,25 @@ namespace BL
             return newBin;
         }
 
+        public void UpdateBinData(BinData i_BinData)
+        {
+            UpdateBin(transformBinDataToBin(i_BinData), DateTime.Now);
+        }
+
         public void UpdateBin(Bin updatedBin, DateTime dt)
         {
             try
             {
                 Bin oldBin = this.db.Bins.Where(x => x.BinId == updatedBin.BinId).SingleOrDefault();
+
                 if (oldBin != null)
                 {
                     //oldBin.CurrentCapacity = updatedBin.CurrentCapacity;
                     oldBin = updatedBin;
                     //you can update more properties here.... (in the same way)
-                    UpdateBinLogForEachBinAction(updatedBin, dt);
+                    updateBinLogForEachBinAction(updatedBin, dt);
                 }
-                this.db.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw ErrorHandler.Handle(ex, this);
-            }
-        }
 
-        private void UpdateBinLogForEachBinAction(Bin updatedBin, DateTime dt)
-        {
-            // TODO: Think about moving the code below into a class ... :S
-            BinLog bLog = new BinLog();
-
-            bLog.BinId = updatedBin.BinId;
-            bLog.CurrentCapacity = updatedBin.CurrentCapacity;
-            bLog.UpdateDate = dt;
-
-            try
-            {
-                this.db.BinLogs.Add(bLog);
                 this.db.SaveChanges();
             }
             catch (Exception ex)
@@ -168,6 +154,58 @@ namespace BL
             }
 
             return bt.Capacity;
+        }
+
+        private BinData transformToBinData(Bin i_Bin)
+        {
+            BinData binData = new BinData();
+
+            binData.binId = i_Bin.BinId;
+            binData.binTypeId = i_Bin.BinTypeId;
+            binData.binTypeDesc = i_Bin.LUT_BinType.BinTypeDesc;
+            binData.cityAddress = i_Bin.CityAddress;
+            binData.currentCapacity = i_Bin.CurrentCapacity;
+            binData.isInUser = i_Bin.IsInUse;
+            binData.maxCapacity = i_Bin.LUT_BinType.Capacity;
+            binData.streetAddress = i_Bin.StreetAddress;
+            binData.streetNumber = i_Bin.StreetNumber;
+
+            return binData;
+        }
+
+        private Bin transformBinDataToBin(BinData i_BinData)
+        {
+            Bin bin = new Bin();
+
+            bin.CityAddress = i_BinData.cityAddress;
+            bin.IsInUse = i_BinData.isInUser;
+            bin.StreetAddress = i_BinData.streetAddress;
+            bin.CurrentCapacity = i_BinData.currentCapacity;
+            bin.BinTypeId = i_BinData.binTypeId;
+            bin.StreetNumber = i_BinData.streetNumber;
+            bin.LUT_BinType.Capacity = i_BinData.maxCapacity;
+            bin.LUT_BinType.BinTypeDesc = i_BinData.binTypeDesc;
+
+            return bin;
+        }
+
+        private void updateBinLogForEachBinAction(Bin updatedBin, DateTime dt)
+        {
+            BinLog bLog = new BinLog();
+
+            bLog.BinId = updatedBin.BinId;
+            bLog.CurrentCapacity = updatedBin.CurrentCapacity;
+            bLog.UpdateDate = dt;
+
+            try
+            {
+                this.db.BinLogs.Add(bLog);
+                this.db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
         }
     }
 }
