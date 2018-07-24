@@ -22,6 +22,10 @@ namespace WasteManagerWebApi.Controllers
 
             using (BL.TruckBusinessLogic bl = new BL.TruckBusinessLogic())
             {             
+                // a good implementation, but move this Logic to the Bl, 
+                // so bl.GetAllTrucks will return a list that's alredy a "TruckData"
+
+                // allTruckModels = bl.GetA
                 allTrucks = bl.GetAllTrucks();
 
                 foreach (Truck truck in allTrucks)
@@ -145,10 +149,11 @@ namespace WasteManagerWebApi.Controllers
             truck.CurrentCapacity = i_Truck.CurrentCapacity;
             truck.TruckId = i_Truck.Id;
             truck.TruckTypeId = i_Truck.TruckTypeId;
-            truck.LUT_TruckType.TruckTypeDesc = i_Truck.TruckTypeDesc;
-            truck.LUT_TruckType.Capacity = i_Truck.Capacity;
+            //truck.LUT_TruckType.TruckTypeDesc = i_Truck.TruckTypeDesc;
+            //truck.LUT_TruckType.Capacity = i_Truck.Capacity;
 
             return truck;
         }
+
     }
 }

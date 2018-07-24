@@ -26,7 +26,10 @@ namespace BL
         {
             try
             {
-                return this.db.Trucks.ToList();
+                 return this.db.Trucks.ToList();
+                // instead of return, move to a local var
+                // transform(localvar);
+                // return list of TruckData;
             }
             catch (Exception ex)
             {
@@ -69,7 +72,9 @@ namespace BL
                 Truck truck = this.db.Trucks.Where(x => x.TruckId == updatedTruck.TruckId).SingleOrDefault();
                 if (truck != null)
                 {
-                    truck = updatedTruck;
+                    truck.TruckId = updatedTruck.TruckId;
+                    truck.TruckTypeId = updatedTruck.TruckTypeId;
+                    truck.CurrentCapacity = updatedTruck.CurrentCapacity;
                 }
                 this.db.SaveChanges();
             }
@@ -111,5 +116,15 @@ namespace BL
 
             }
         }
+
+        //public void AddNewTruckType(int capacity, string truckTypeDesc)
+        //{
+        //    LUT_TruckType newTruckType = new LUT_TruckType();
+        //    newTruckType.Capacity = 50000;
+        //    newTruckType.TruckTypeDesc = "CoolTruck";
+
+        //    this.db.LUT_TruckType.Add(newTruckType);
+
+        //}
     }
 }
