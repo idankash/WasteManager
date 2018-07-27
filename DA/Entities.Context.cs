@@ -27,8 +27,11 @@ namespace DAL
     
         public virtual DbSet<Bin> Bins { get; set; }
         public virtual DbSet<BinLog> BinLogs { get; set; }
+        public virtual DbSet<Building> Buildings { get; set; }
+        public virtual DbSet<LUT_Area> LUT_Area { get; set; }
         public virtual DbSet<LUT_BinType> LUT_BinType { get; set; }
         public virtual DbSet<LUT_TruckType> LUT_TruckType { get; set; }
+        public virtual DbSet<LUT_Weekdays> LUT_Weekdays { get; set; }
         public virtual DbSet<Truck> Trucks { get; set; }
         public virtual DbSet<WasteTransferLog> WasteTransferLogs { get; set; }
     }

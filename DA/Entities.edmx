@@ -4,18 +4,16 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="WasteManagerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="WasteManagerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Bin">
           <Key>
             <PropertyRef Name="BinId" />
           </Key>
           <Property Name="BinId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BinTypeId" Type="int" Nullable="false" />
-          <Property Name="CityAddress" Type="varchar" MaxLength="100" />
-          <Property Name="StreetAddress" Type="varchar" MaxLength="100" />
-          <Property Name="StreetNumber" Type="varchar" MaxLength="50" />
           <Property Name="CurrentCapacity" Type="float" Nullable="false" />
           <Property Name="IsInUse" Type="bit" Nullable="false" />
+          <Property Name="BuildingId" Type="int" />
         </EntityType>
         <EntityType Name="BinLog">
           <Key>
@@ -26,6 +24,33 @@
           <Property Name="CurrentCapacity" Type="float" Nullable="false" />
           <Property Name="UpdateDate" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="Building">
+          <Key>
+            <PropertyRef Name="BuildingId" />
+          </Key>
+          <Property Name="BuildingId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StreetName" Type="varchar" MaxLength="100" />
+          <Property Name="StreetNumber" Type="varchar" MaxLength="50" />
+          <Property Name="TrashDisposalArea" Type="float" Nullable="false" />
+          <Property Name="AreaId" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'WasteManager.dbo.BuildingWasteTransferWeekdays' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="BuildingWasteTransferWeekdays">
+          <Key>
+            <PropertyRef Name="BuildingId" />
+            <PropertyRef Name="WasteTransferWeekdayId" />
+          </Key>
+          <Property Name="BuildingId" Type="int" Nullable="false" />
+          <Property Name="WasteTransferWeekdayId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LUT_Area">
+          <Key>
+            <PropertyRef Name="AreaId" />
+          </Key>
+          <Property Name="AreaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AreaDesc" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="LUT_BinType">
           <Key>
             <PropertyRef Name="BinTypeId" />
@@ -33,6 +58,7 @@
           <Property Name="BinTypeId" Type="int" Nullable="false" />
           <Property Name="BinTypeDesc" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Capacity" Type="float" Nullable="false" />
+          <Property Name="BinTrashDisposalArea" Type="float" />
         </EntityType>
         <EntityType Name="LUT_TruckType">
           <Key>
@@ -42,6 +68,13 @@
           <Property Name="TruckTypeDesc" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Capacity" Type="float" Nullable="false" />
         </EntityType>
+        <EntityType Name="LUT_Weekdays">
+          <Key>
+            <PropertyRef Name="WeekdayId" />
+          </Key>
+          <Property Name="WeekdayId" Type="int" Nullable="false" />
+          <Property Name="WeekdayDesc" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="Truck">
           <Key>
             <PropertyRef Name="TruckId" />
@@ -49,6 +82,7 @@
           <Property Name="TruckId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TruckTypeId" Type="int" Nullable="false" />
           <Property Name="CurrentCapacity" Type="float" Nullable="false" />
+          <Property Name="AreaId" Type="int" />
         </EntityType>
         <EntityType Name="WasteTransferLog">
           <Key>
@@ -68,6 +102,18 @@
             </Principal>
             <Dependent Role="BinLog">
               <PropertyRef Name="BinId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bin_Building#buildingId">
+          <End Role="Building" Type="Self.Building" Multiplicity="0..1" />
+          <End Role="Bin" Type="Self.Bin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Building">
+              <PropertyRef Name="BuildingId" />
+            </Principal>
+            <Dependent Role="Bin">
+              <PropertyRef Name="BuildingId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -95,6 +141,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Building_LUT_Area#AreaId">
+          <End Role="LUT_Area" Type="Self.LUT_Area" Multiplicity="1" />
+          <End Role="Building" Type="Self.Building" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LUT_Area">
+              <PropertyRef Name="AreaId" />
+            </Principal>
+            <Dependent Role="Building">
+              <PropertyRef Name="AreaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BuildingWasteTransferWeekdays_Building#BuildingId">
+          <End Role="Building" Type="Self.Building" Multiplicity="1" />
+          <End Role="BuildingWasteTransferWeekdays" Type="Self.BuildingWasteTransferWeekdays" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Building">
+              <PropertyRef Name="BuildingId" />
+            </Principal>
+            <Dependent Role="BuildingWasteTransferWeekdays">
+              <PropertyRef Name="BuildingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BuildingWasteTransferWeekdays_LUT_Weekdays#WeekdayId">
+          <End Role="LUT_Weekdays" Type="Self.LUT_Weekdays" Multiplicity="1" />
+          <End Role="BuildingWasteTransferWeekdays" Type="Self.BuildingWasteTransferWeekdays" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LUT_Weekdays">
+              <PropertyRef Name="WeekdayId" />
+            </Principal>
+            <Dependent Role="BuildingWasteTransferWeekdays">
+              <PropertyRef Name="WasteTransferWeekdayId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_LUT_TruckType_Truck#TruckTypeId">
           <End Role="LUT_TruckType" Type="Self.LUT_TruckType" Multiplicity="1" />
           <End Role="Truck" Type="Self.Truck" Multiplicity="*" />
@@ -104,6 +186,18 @@
             </Principal>
             <Dependent Role="Truck">
               <PropertyRef Name="TruckTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Truck_LUT_Area#AreaId">
+          <End Role="LUT_Area" Type="Self.LUT_Area" Multiplicity="0..1" />
+          <End Role="Truck" Type="Self.Truck" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LUT_Area">
+              <PropertyRef Name="AreaId" />
+            </Principal>
+            <Dependent Role="Truck">
+              <PropertyRef Name="AreaId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -122,13 +216,26 @@
         <EntityContainer Name="WasteManagerModelStoreContainer">
           <EntitySet Name="Bin" EntityType="Self.Bin" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BinLog" EntityType="Self.BinLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Building" EntityType="Self.Building" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LUT_Area" EntityType="Self.LUT_Area" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LUT_BinType" EntityType="Self.LUT_BinType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LUT_TruckType" EntityType="Self.LUT_TruckType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LUT_Weekdays" EntityType="Self.LUT_Weekdays" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Truck" EntityType="Self.Truck" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WasteTransferLog" EntityType="Self.WasteTransferLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BuildingWasteTransferWeekdays" EntityType="Self.BuildingWasteTransferWeekdays" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BuildingWasteTransferWeekdays].[BuildingId] AS [BuildingId], 
+    [BuildingWasteTransferWeekdays].[WasteTransferWeekdayId] AS [WasteTransferWeekdayId]
+    FROM [dbo].[BuildingWasteTransferWeekdays] AS [BuildingWasteTransferWeekdays]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_Bin_BinLog#BinId" Association="Self.FK_Bin_BinLog#BinId">
             <End Role="Bin" EntitySet="Bin" />
             <End Role="BinLog" EntitySet="BinLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bin_Building#buildingId" Association="Self.FK_Bin_Building#buildingId">
+            <End Role="Building" EntitySet="Building" />
+            <End Role="Bin" EntitySet="Bin" />
           </AssociationSet>
           <AssociationSet Name="FK_Bin_LUT_BinType#BinTypeId" Association="Self.FK_Bin_LUT_BinType#BinTypeId">
             <End Role="LUT_BinType" EntitySet="LUT_BinType" />
@@ -138,8 +245,24 @@
             <End Role="Bin" EntitySet="Bin" />
             <End Role="WasteTransferLog" EntitySet="WasteTransferLog" />
           </AssociationSet>
+          <AssociationSet Name="FK_Building_LUT_Area#AreaId" Association="Self.FK_Building_LUT_Area#AreaId">
+            <End Role="LUT_Area" EntitySet="LUT_Area" />
+            <End Role="Building" EntitySet="Building" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BuildingWasteTransferWeekdays_Building#BuildingId" Association="Self.FK_BuildingWasteTransferWeekdays_Building#BuildingId">
+            <End Role="Building" EntitySet="Building" />
+            <End Role="BuildingWasteTransferWeekdays" EntitySet="BuildingWasteTransferWeekdays" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BuildingWasteTransferWeekdays_LUT_Weekdays#WeekdayId" Association="Self.FK_BuildingWasteTransferWeekdays_LUT_Weekdays#WeekdayId">
+            <End Role="LUT_Weekdays" EntitySet="LUT_Weekdays" />
+            <End Role="BuildingWasteTransferWeekdays" EntitySet="BuildingWasteTransferWeekdays" />
+          </AssociationSet>
           <AssociationSet Name="FK_LUT_TruckType_Truck#TruckTypeId" Association="Self.FK_LUT_TruckType_Truck#TruckTypeId">
             <End Role="LUT_TruckType" EntitySet="LUT_TruckType" />
+            <End Role="Truck" EntitySet="Truck" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Truck_LUT_Area#AreaId" Association="Self.FK_Truck_LUT_Area#AreaId">
+            <End Role="LUT_Area" EntitySet="LUT_Area" />
             <End Role="Truck" EntitySet="Truck" />
           </AssociationSet>
           <AssociationSet Name="FK_Truck_WasteTransferLog#TruckId" Association="Self.FK_Truck_WasteTransferLog#TruckId">
@@ -147,25 +270,70 @@
             <End Role="WasteTransferLog" EntitySet="WasteTransferLog" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="WasteManagerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="WasteManagerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Bins" EntityType="WasteManagerModel.Bin" />
+          <EntitySet Name="BinLogs" EntityType="WasteManagerModel.BinLog" />
+          <EntitySet Name="Buildings" EntityType="WasteManagerModel.Building" />
+          <EntitySet Name="LUT_Area" EntityType="WasteManagerModel.LUT_Area" />
+          <EntitySet Name="LUT_BinType" EntityType="WasteManagerModel.LUT_BinType" />
+          <EntitySet Name="LUT_TruckType" EntityType="WasteManagerModel.LUT_TruckType" />
+          <EntitySet Name="LUT_Weekdays" EntityType="WasteManagerModel.LUT_Weekdays" />
+          <EntitySet Name="Trucks" EntityType="WasteManagerModel.Truck" />
+          <EntitySet Name="WasteTransferLogs" EntityType="WasteManagerModel.WasteTransferLog" />
+          <AssociationSet Name="FK_Bin_BinLog_BinId" Association="WasteManagerModel.FK_Bin_BinLog_BinId">
+            <End Role="Bin" EntitySet="Bins" />
+            <End Role="BinLog" EntitySet="BinLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bin_Building_buildingId" Association="WasteManagerModel.FK_Bin_Building_buildingId">
+            <End Role="Building" EntitySet="Buildings" />
+            <End Role="Bin" EntitySet="Bins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bin_LUT_BinType_BinTypeId" Association="WasteManagerModel.FK_Bin_LUT_BinType_BinTypeId">
+            <End Role="LUT_BinType" EntitySet="LUT_BinType" />
+            <End Role="Bin" EntitySet="Bins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bin_WasteTransferLog_BinId" Association="WasteManagerModel.FK_Bin_WasteTransferLog_BinId">
+            <End Role="Bin" EntitySet="Bins" />
+            <End Role="WasteTransferLog" EntitySet="WasteTransferLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Building_LUT_Area_AreaId" Association="WasteManagerModel.FK_Building_LUT_Area_AreaId">
+            <End Role="LUT_Area" EntitySet="LUT_Area" />
+            <End Role="Building" EntitySet="Buildings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Truck_LUT_Area_AreaId" Association="WasteManagerModel.FK_Truck_LUT_Area_AreaId">
+            <End Role="LUT_Area" EntitySet="LUT_Area" />
+            <End Role="Truck" EntitySet="Trucks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LUT_TruckType_Truck_TruckTypeId" Association="WasteManagerModel.FK_LUT_TruckType_Truck_TruckTypeId">
+            <End Role="LUT_TruckType" EntitySet="LUT_TruckType" />
+            <End Role="Truck" EntitySet="Trucks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Truck_WasteTransferLog_TruckId" Association="WasteManagerModel.FK_Truck_WasteTransferLog_TruckId">
+            <End Role="Truck" EntitySet="Trucks" />
+            <End Role="WasteTransferLog" EntitySet="WasteTransferLogs" />
+          </AssociationSet>
+          <AssociationSet Name="BuildingWasteTransferWeekdays" Association="WasteManagerModel.BuildingWasteTransferWeekdays">
+            <End Role="Building" EntitySet="Buildings" />
+            <End Role="LUT_Weekdays" EntitySet="LUT_Weekdays" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="Bin">
           <Key>
             <PropertyRef Name="BinId" />
           </Key>
           <Property Name="BinId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="BinTypeId" Type="Int32" Nullable="false" />
-          <Property Name="CityAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="StreetAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="StreetNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="CurrentCapacity" Type="Double" Nullable="false" />
           <Property Name="IsInUse" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="BinLogs" Relationship="Self.FK_Bin_BinLog_BinId" FromRole="Bin" ToRole="BinLog" />
-          <NavigationProperty Name="LUT_BinType" Relationship="Self.FK_Bin_LUT_BinType_BinTypeId" FromRole="Bin" ToRole="LUT_BinType" />
-          <NavigationProperty Name="WasteTransferLogs" Relationship="Self.FK_Bin_WasteTransferLog_BinId" FromRole="Bin" ToRole="WasteTransferLog" />
+          <Property Name="BuildingId" Type="Int32" />
+          <NavigationProperty Name="BinLogs" Relationship="WasteManagerModel.FK_Bin_BinLog_BinId" FromRole="Bin" ToRole="BinLog" />
+          <NavigationProperty Name="Building" Relationship="WasteManagerModel.FK_Bin_Building_buildingId" FromRole="Bin" ToRole="Building" />
+          <NavigationProperty Name="LUT_BinType" Relationship="WasteManagerModel.FK_Bin_LUT_BinType_BinTypeId" FromRole="Bin" ToRole="LUT_BinType" />
+          <NavigationProperty Name="WasteTransferLogs" Relationship="WasteManagerModel.FK_Bin_WasteTransferLog_BinId" FromRole="Bin" ToRole="WasteTransferLog" />
         </EntityType>
         <EntityType Name="BinLog">
           <Key>
@@ -175,25 +343,56 @@
           <Property Name="BinId" Type="Int32" Nullable="false" />
           <Property Name="CurrentCapacity" Type="Double" Nullable="false" />
           <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Bin" Relationship="Self.FK_Bin_BinLog_BinId" FromRole="BinLog" ToRole="Bin" />
+          <NavigationProperty Name="Bin" Relationship="WasteManagerModel.FK_Bin_BinLog_BinId" FromRole="BinLog" ToRole="Bin" />
+        </EntityType>
+        <EntityType Name="Building">
+          <Key>
+            <PropertyRef Name="BuildingId" />
+          </Key>
+          <Property Name="BuildingId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StreetName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="StreetNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TrashDisposalArea" Type="Double" Nullable="false" />
+          <Property Name="AreaId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Bins" Relationship="WasteManagerModel.FK_Bin_Building_buildingId" FromRole="Building" ToRole="Bin" />
+          <NavigationProperty Name="LUT_Area" Relationship="WasteManagerModel.FK_Building_LUT_Area_AreaId" FromRole="Building" ToRole="LUT_Area" />
+          <NavigationProperty Name="LUT_Weekdays" Relationship="WasteManagerModel.BuildingWasteTransferWeekdays" FromRole="Building" ToRole="LUT_Weekdays" />
+        </EntityType>
+        <EntityType Name="LUT_Area">
+          <Key>
+            <PropertyRef Name="AreaId" />
+          </Key>
+          <Property Name="AreaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AreaDesc" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Buildings" Relationship="WasteManagerModel.FK_Building_LUT_Area_AreaId" FromRole="LUT_Area" ToRole="Building" />
+          <NavigationProperty Name="Trucks" Relationship="WasteManagerModel.FK_Truck_LUT_Area_AreaId" FromRole="LUT_Area" ToRole="Truck" />
         </EntityType>
         <EntityType Name="LUT_BinType">
           <Key>
             <PropertyRef Name="BinTypeId" />
           </Key>
           <Property Name="BinTypeId" Type="Int32" Nullable="false" />
-          <Property Name="BinTypeDesc" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BinTypeDesc" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Capacity" Type="Double" Nullable="false" />
-          <NavigationProperty Name="Bins" Relationship="Self.FK_Bin_LUT_BinType_BinTypeId" FromRole="LUT_BinType" ToRole="Bin" />
+          <Property Name="BinTrashDisposalArea" Type="Double" />
+          <NavigationProperty Name="Bins" Relationship="WasteManagerModel.FK_Bin_LUT_BinType_BinTypeId" FromRole="LUT_BinType" ToRole="Bin" />
         </EntityType>
         <EntityType Name="LUT_TruckType">
           <Key>
             <PropertyRef Name="TruckTypeId" />
           </Key>
           <Property Name="TruckTypeId" Type="Int32" Nullable="false" />
-          <Property Name="TruckTypeDesc" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TruckTypeDesc" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Capacity" Type="Double" Nullable="false" />
-          <NavigationProperty Name="Trucks" Relationship="Self.FK_LUT_TruckType_Truck_TruckTypeId" FromRole="LUT_TruckType" ToRole="Truck" />
+          <NavigationProperty Name="Trucks" Relationship="WasteManagerModel.FK_LUT_TruckType_Truck_TruckTypeId" FromRole="LUT_TruckType" ToRole="Truck" />
+        </EntityType>
+        <EntityType Name="LUT_Weekdays">
+          <Key>
+            <PropertyRef Name="WeekdayId" />
+          </Key>
+          <Property Name="WeekdayId" Type="Int32" Nullable="false" />
+          <Property Name="WeekdayDesc" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Buildings" Relationship="WasteManagerModel.BuildingWasteTransferWeekdays" FromRole="LUT_Weekdays" ToRole="Building" />
         </EntityType>
         <EntityType Name="Truck">
           <Key>
@@ -202,8 +401,10 @@
           <Property Name="TruckId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TruckTypeId" Type="Int32" Nullable="false" />
           <Property Name="CurrentCapacity" Type="Double" Nullable="false" />
-          <NavigationProperty Name="LUT_TruckType" Relationship="Self.FK_LUT_TruckType_Truck_TruckTypeId" FromRole="Truck" ToRole="LUT_TruckType" />
-          <NavigationProperty Name="WasteTransferLogs" Relationship="Self.FK_Truck_WasteTransferLog_TruckId" FromRole="Truck" ToRole="WasteTransferLog" />
+          <Property Name="AreaId" Type="Int32" />
+          <NavigationProperty Name="LUT_Area" Relationship="WasteManagerModel.FK_Truck_LUT_Area_AreaId" FromRole="Truck" ToRole="LUT_Area" />
+          <NavigationProperty Name="LUT_TruckType" Relationship="WasteManagerModel.FK_LUT_TruckType_Truck_TruckTypeId" FromRole="Truck" ToRole="LUT_TruckType" />
+          <NavigationProperty Name="WasteTransferLogs" Relationship="WasteManagerModel.FK_Truck_WasteTransferLog_TruckId" FromRole="Truck" ToRole="WasteTransferLog" />
         </EntityType>
         <EntityType Name="WasteTransferLog">
           <Key>
@@ -213,12 +414,12 @@
           <Property Name="TruckId" Type="Int32" Nullable="false" />
           <Property Name="BinId" Type="Int32" Nullable="false" />
           <Property Name="TransferedCapacity" Type="Double" Nullable="false" />
-          <NavigationProperty Name="Bin" Relationship="Self.FK_Bin_WasteTransferLog_BinId" FromRole="WasteTransferLog" ToRole="Bin" />
-          <NavigationProperty Name="Truck" Relationship="Self.FK_Truck_WasteTransferLog_TruckId" FromRole="WasteTransferLog" ToRole="Truck" />
+          <NavigationProperty Name="Bin" Relationship="WasteManagerModel.FK_Bin_WasteTransferLog_BinId" FromRole="WasteTransferLog" ToRole="Bin" />
+          <NavigationProperty Name="Truck" Relationship="WasteManagerModel.FK_Truck_WasteTransferLog_TruckId" FromRole="WasteTransferLog" ToRole="Truck" />
         </EntityType>
         <Association Name="FK_Bin_BinLog_BinId">
-          <End Role="Bin" Type="Self.Bin" Multiplicity="1" />
-          <End Role="BinLog" Type="Self.BinLog" Multiplicity="*" />
+          <End Type="WasteManagerModel.Bin" Role="Bin" Multiplicity="1" />
+          <End Type="WasteManagerModel.BinLog" Role="BinLog" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Bin">
               <PropertyRef Name="BinId" />
@@ -228,9 +429,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Bin_Building_buildingId">
+          <End Type="WasteManagerModel.Building" Role="Building" Multiplicity="0..1" />
+          <End Type="WasteManagerModel.Bin" Role="Bin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Building">
+              <PropertyRef Name="BuildingId" />
+            </Principal>
+            <Dependent Role="Bin">
+              <PropertyRef Name="BuildingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Bin_LUT_BinType_BinTypeId">
-          <End Role="LUT_BinType" Type="Self.LUT_BinType" Multiplicity="1" />
-          <End Role="Bin" Type="Self.Bin" Multiplicity="*" />
+          <End Type="WasteManagerModel.LUT_BinType" Role="LUT_BinType" Multiplicity="1" />
+          <End Type="WasteManagerModel.Bin" Role="Bin" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="LUT_BinType">
               <PropertyRef Name="BinTypeId" />
@@ -241,8 +454,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Bin_WasteTransferLog_BinId">
-          <End Role="Bin" Type="Self.Bin" Multiplicity="1" />
-          <End Role="WasteTransferLog" Type="Self.WasteTransferLog" Multiplicity="*" />
+          <End Type="WasteManagerModel.Bin" Role="Bin" Multiplicity="1" />
+          <End Type="WasteManagerModel.WasteTransferLog" Role="WasteTransferLog" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Bin">
               <PropertyRef Name="BinId" />
@@ -252,9 +465,33 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Building_LUT_Area_AreaId">
+          <End Type="WasteManagerModel.LUT_Area" Role="LUT_Area" Multiplicity="1" />
+          <End Type="WasteManagerModel.Building" Role="Building" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LUT_Area">
+              <PropertyRef Name="AreaId" />
+            </Principal>
+            <Dependent Role="Building">
+              <PropertyRef Name="AreaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Truck_LUT_Area_AreaId">
+          <End Type="WasteManagerModel.LUT_Area" Role="LUT_Area" Multiplicity="0..1" />
+          <End Type="WasteManagerModel.Truck" Role="Truck" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LUT_Area">
+              <PropertyRef Name="AreaId" />
+            </Principal>
+            <Dependent Role="Truck">
+              <PropertyRef Name="AreaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_LUT_TruckType_Truck_TruckTypeId">
-          <End Role="LUT_TruckType" Type="Self.LUT_TruckType" Multiplicity="1" />
-          <End Role="Truck" Type="Self.Truck" Multiplicity="*" />
+          <End Type="WasteManagerModel.LUT_TruckType" Role="LUT_TruckType" Multiplicity="1" />
+          <End Type="WasteManagerModel.Truck" Role="Truck" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="LUT_TruckType">
               <PropertyRef Name="TruckTypeId" />
@@ -265,8 +502,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Truck_WasteTransferLog_TruckId">
-          <End Role="Truck" Type="Self.Truck" Multiplicity="1" />
-          <End Role="WasteTransferLog" Type="Self.WasteTransferLog" Multiplicity="*" />
+          <End Type="WasteManagerModel.Truck" Role="Truck" Multiplicity="1" />
+          <End Type="WasteManagerModel.WasteTransferLog" Role="WasteTransferLog" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Truck">
               <PropertyRef Name="TruckId" />
@@ -276,35 +513,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="WasteManagerEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Bins" EntityType="Self.Bin" />
-          <EntitySet Name="BinLogs" EntityType="Self.BinLog" />
-          <EntitySet Name="LUT_BinType" EntityType="Self.LUT_BinType" />
-          <EntitySet Name="LUT_TruckType" EntityType="Self.LUT_TruckType" />
-          <EntitySet Name="Trucks" EntityType="Self.Truck" />
-          <EntitySet Name="WasteTransferLogs" EntityType="Self.WasteTransferLog" />
-          <AssociationSet Name="FK_Bin_BinLog_BinId" Association="Self.FK_Bin_BinLog_BinId">
-            <End Role="Bin" EntitySet="Bins" />
-            <End Role="BinLog" EntitySet="BinLogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Bin_LUT_BinType_BinTypeId" Association="Self.FK_Bin_LUT_BinType_BinTypeId">
-            <End Role="LUT_BinType" EntitySet="LUT_BinType" />
-            <End Role="Bin" EntitySet="Bins" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Bin_WasteTransferLog_BinId" Association="Self.FK_Bin_WasteTransferLog_BinId">
-            <End Role="Bin" EntitySet="Bins" />
-            <End Role="WasteTransferLog" EntitySet="WasteTransferLogs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_LUT_TruckType_Truck_TruckTypeId" Association="Self.FK_LUT_TruckType_Truck_TruckTypeId">
-            <End Role="LUT_TruckType" EntitySet="LUT_TruckType" />
-            <End Role="Truck" EntitySet="Trucks" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Truck_WasteTransferLog_TruckId" Association="Self.FK_Truck_WasteTransferLog_TruckId">
-            <End Role="Truck" EntitySet="Trucks" />
-            <End Role="WasteTransferLog" EntitySet="WasteTransferLogs" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema>
+        <Association Name="BuildingWasteTransferWeekdays">
+          <End Type="WasteManagerModel.Building" Role="Building" Multiplicity="*" />
+          <End Type="WasteManagerModel.LUT_Weekdays" Role="LUT_Weekdays" Multiplicity="*" />
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -313,63 +526,98 @@
           <EntitySetMapping Name="Bins">
             <EntityTypeMapping TypeName="WasteManagerModel.Bin">
               <MappingFragment StoreEntitySet="Bin">
-                <ScalarProperty Name="BinId" ColumnName="BinId" />
-                <ScalarProperty Name="BinTypeId" ColumnName="BinTypeId" />
-                <ScalarProperty Name="CityAddress" ColumnName="CityAddress" />
-                <ScalarProperty Name="StreetAddress" ColumnName="StreetAddress" />
-                <ScalarProperty Name="StreetNumber" ColumnName="StreetNumber" />
-                <ScalarProperty Name="CurrentCapacity" ColumnName="CurrentCapacity" />
+                <ScalarProperty Name="BuildingId" ColumnName="BuildingId" />
                 <ScalarProperty Name="IsInUse" ColumnName="IsInUse" />
+                <ScalarProperty Name="CurrentCapacity" ColumnName="CurrentCapacity" />
+                <ScalarProperty Name="BinTypeId" ColumnName="BinTypeId" />
+                <ScalarProperty Name="BinId" ColumnName="BinId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="BinLogs">
             <EntityTypeMapping TypeName="WasteManagerModel.BinLog">
               <MappingFragment StoreEntitySet="BinLog">
-                <ScalarProperty Name="BinLogId" ColumnName="BinLogId" />
-                <ScalarProperty Name="BinId" ColumnName="BinId" />
-                <ScalarProperty Name="CurrentCapacity" ColumnName="CurrentCapacity" />
                 <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CurrentCapacity" ColumnName="CurrentCapacity" />
+                <ScalarProperty Name="BinId" ColumnName="BinId" />
+                <ScalarProperty Name="BinLogId" ColumnName="BinLogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Buildings">
+            <EntityTypeMapping TypeName="WasteManagerModel.Building">
+              <MappingFragment StoreEntitySet="Building">
+                <ScalarProperty Name="AreaId" ColumnName="AreaId" />
+                <ScalarProperty Name="TrashDisposalArea" ColumnName="TrashDisposalArea" />
+                <ScalarProperty Name="StreetNumber" ColumnName="StreetNumber" />
+                <ScalarProperty Name="StreetName" ColumnName="StreetName" />
+                <ScalarProperty Name="BuildingId" ColumnName="BuildingId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LUT_Area">
+            <EntityTypeMapping TypeName="WasteManagerModel.LUT_Area">
+              <MappingFragment StoreEntitySet="LUT_Area">
+                <ScalarProperty Name="AreaDesc" ColumnName="AreaDesc" />
+                <ScalarProperty Name="AreaId" ColumnName="AreaId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="LUT_BinType">
             <EntityTypeMapping TypeName="WasteManagerModel.LUT_BinType">
               <MappingFragment StoreEntitySet="LUT_BinType">
-                <ScalarProperty Name="BinTypeId" ColumnName="BinTypeId" />
-                <ScalarProperty Name="BinTypeDesc" ColumnName="BinTypeDesc" />
+                <ScalarProperty Name="BinTrashDisposalArea" ColumnName="BinTrashDisposalArea" />
                 <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="BinTypeDesc" ColumnName="BinTypeDesc" />
+                <ScalarProperty Name="BinTypeId" ColumnName="BinTypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="LUT_TruckType">
             <EntityTypeMapping TypeName="WasteManagerModel.LUT_TruckType">
               <MappingFragment StoreEntitySet="LUT_TruckType">
-                <ScalarProperty Name="TruckTypeId" ColumnName="TruckTypeId" />
-                <ScalarProperty Name="TruckTypeDesc" ColumnName="TruckTypeDesc" />
                 <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="TruckTypeDesc" ColumnName="TruckTypeDesc" />
+                <ScalarProperty Name="TruckTypeId" ColumnName="TruckTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LUT_Weekdays">
+            <EntityTypeMapping TypeName="WasteManagerModel.LUT_Weekdays">
+              <MappingFragment StoreEntitySet="LUT_Weekdays">
+                <ScalarProperty Name="WeekdayDesc" ColumnName="WeekdayDesc" />
+                <ScalarProperty Name="WeekdayId" ColumnName="WeekdayId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Trucks">
             <EntityTypeMapping TypeName="WasteManagerModel.Truck">
               <MappingFragment StoreEntitySet="Truck">
-                <ScalarProperty Name="TruckId" ColumnName="TruckId" />
-                <ScalarProperty Name="TruckTypeId" ColumnName="TruckTypeId" />
+                <ScalarProperty Name="AreaId" ColumnName="AreaId" />
                 <ScalarProperty Name="CurrentCapacity" ColumnName="CurrentCapacity" />
+                <ScalarProperty Name="TruckTypeId" ColumnName="TruckTypeId" />
+                <ScalarProperty Name="TruckId" ColumnName="TruckId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="WasteTransferLogs">
             <EntityTypeMapping TypeName="WasteManagerModel.WasteTransferLog">
               <MappingFragment StoreEntitySet="WasteTransferLog">
-                <ScalarProperty Name="WasteCollectionId" ColumnName="WasteCollectionId" />
-                <ScalarProperty Name="TruckId" ColumnName="TruckId" />
-                <ScalarProperty Name="BinId" ColumnName="BinId" />
                 <ScalarProperty Name="TransferedCapacity" ColumnName="TransferedCapacity" />
+                <ScalarProperty Name="BinId" ColumnName="BinId" />
+                <ScalarProperty Name="TruckId" ColumnName="TruckId" />
+                <ScalarProperty Name="WasteCollectionId" ColumnName="WasteCollectionId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <AssociationSetMapping Name="BuildingWasteTransferWeekdays" TypeName="WasteManagerModel.BuildingWasteTransferWeekdays" StoreEntitySet="BuildingWasteTransferWeekdays">
+            <EndProperty Name="LUT_Weekdays">
+              <ScalarProperty Name="WeekdayId" ColumnName="WasteTransferWeekdayId" />
+            </EndProperty>
+            <EndProperty Name="Building">
+              <ScalarProperty Name="BuildingId" ColumnName="BuildingId" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

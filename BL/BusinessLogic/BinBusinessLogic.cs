@@ -38,12 +38,12 @@ namespace BL
                         binId = dbBin.BinId,
                         binTypeId = dbBin.BinTypeId,
                         binTypeDesc = dbBin.LUT_BinType.BinTypeDesc,
-                        cityAddress = dbBin.CityAddress,
+                        //cityAddress = dbBin.CityAddress,
                         currentCapacity = dbBin.CurrentCapacity,
                         isInUser = dbBin.IsInUse,
                         maxCapacity = dbBin.LUT_BinType.Capacity,
-                        streetAddress = dbBin.StreetAddress,
-                        streetNumber = dbBin.StreetNumber
+                        //streetAddress = dbBin.StreetAddress,
+                        //streetNumber = dbBin.StreetNumber
                     };
 
                     bins.Add(binData);

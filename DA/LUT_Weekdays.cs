@@ -12,22 +12,18 @@ namespace DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class Truck
+    public partial class LUT_Weekdays
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Truck()
+        public LUT_Weekdays()
         {
-            this.WasteTransferLogs = new HashSet<WasteTransferLog>();
+            this.Buildings = new HashSet<Building>();
         }
     
-        public int TruckId { get; set; }
-        public int TruckTypeId { get; set; }
-        public double CurrentCapacity { get; set; }
-        public Nullable<int> AreaId { get; set; }
+        public int WeekdayId { get; set; }
+        public string WeekdayDesc { get; set; }
     
-        public virtual LUT_Area LUT_Area { get; set; }
-        public virtual LUT_TruckType LUT_TruckType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<WasteTransferLog> WasteTransferLogs { get; set; }
+        public virtual ICollection<Building> Buildings { get; set; }
     }
 }
