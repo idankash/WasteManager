@@ -23,6 +23,8 @@ namespace BL
 
         // TRUCK - CRUD 
 
+        // TODO - Change the return type to List<TruckData>   (first, we need to impl' TruckData ofcourse...)
+        //        Do it like we did in binlogic.getallbins()  
         public List<Truck> GetAllTrucks()
         {
             try
@@ -35,6 +37,8 @@ namespace BL
             }
         }
 
+        // TODO - change return type to TruckData
+        // TODO - change input parameter from 'id' to 'truckId'
         public Truck GetTruck(int id)
         {
             try
@@ -47,6 +51,10 @@ namespace BL
             }
         }
 
+        // TODO - change input parameter to TruckData
+        //          Inside the body of the method we'll create a new truck of type Truck,
+        //          and then assign it's properties - truck.someProp = truckData.someProp
+        //          lastly we'll use    this.db.Trucks.Add(truck); and save changes...
         public Truck AddNewTruck(Truck newTruck)
         {
             try
@@ -62,6 +70,9 @@ namespace BL
             return newTruck;
         }
 
+        // TODO - Same goes here, your input parameter is going to be TruckData because that's what the client knows...
+        //  So you'll get the Truck by it's id,
+        //  but then you'll assign each field like  'dbTruck.someProp = updatedTruckData.someProp'
         public void UpdateTruck(Truck updatedTruck)
         {
             try
@@ -78,7 +89,9 @@ namespace BL
                 throw ErrorHandler.Handle(ex, this);
             }
         }
+        
 
+        // TODO - change input parameter from 'id' to 'truckId'
         public void DeleteTruck(int id)
         {
             try
@@ -93,6 +106,10 @@ namespace BL
             }
         }
 
+        // TODO -   who is calling this method? if it's the simulator only it's fine
+        //          otherwise, if the client is also calling it, then it can't pass List<Bin>, perhaps maybe pass List<int> binIds?
+
+        // TODO - add TransactionScope to this method (lior).
         public void ClearingBins(List<Bin> binList, int truckId, DateTime currentDateTime)  //Go over all the bins and unloading them.
         {
             try

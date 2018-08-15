@@ -22,6 +22,8 @@ namespace BL
         }
         //TODO - Implement Methods of GET/SET/UPDATE/DELETE things from the database
 
+        // TODO - change method's name to GetAllBins
+        // TODO - Some sort of inner join with Building to get adresses 
         public List<BinData> GetAllBinsData()
         {
             List<Bin> dbBins = null;
@@ -56,6 +58,8 @@ namespace BL
             }
         }
 
+        // TODO - consider removing this method
+        //          Keep it only if it has an inner use.
         public List<Bin> GetAllBins()
         {
             try
@@ -95,6 +99,10 @@ namespace BL
             return newBin;
         }
 
+        // TODO - the input parameter will be BinData so the method needs to be changed accordingly.
+        // TODO - line "oldBin = updatedBin;" is not good. 
+        //        Instead, assign each field seperately and only fields that need to be updated.
+        //        Especially not 'navigation methods'
         public void UpdateBin(Bin updatedBin, DateTime dt)
         {
             try
@@ -103,7 +111,10 @@ namespace BL
                 if (oldBin != null)
                 {
                     //oldBin.CurrentCapacity = updatedBin.CurrentCapacity;
-                    oldBin = updatedBin;
+
+
+                    oldBin = updatedBin; // <- NOT GOOD - SEE COMMENT ABOVE !!!
+                    
                     //you can update more properties here.... (in the same way)
                     UpdateBinLogForEachBinAction(updatedBin, dt);
                 }
@@ -115,9 +126,11 @@ namespace BL
             }
         }
 
+        // TODO - Change Method's name to AddNewBinLog
         private void UpdateBinLogForEachBinAction(Bin updatedBin, DateTime dt)
         {
             // TODO: Think about moving the code below into a class ... :S
+
             BinLog bLog = new BinLog();
 
             bLog.BinId = updatedBin.BinId;
@@ -135,6 +148,9 @@ namespace BL
             }
         }
 
+        // TODO - change input parameter name from 'id' to 'binId'
+        // TODO - when getting 'binToRemove' you used SingleOrDefault(); - that means result could be null/
+        //        you need to add validation that if binToRemove is null throw an exception - 'not found...'
         public void DeleteBin(int id)
         {
             try
@@ -149,6 +165,20 @@ namespace BL
             }
         }
 
+        // TODO - move the validation to inside the try.
+        //        follow this pseudocode:
+        //
+        //          try
+        //          {
+        //              get bt.
+        //              check if bt you got is null
+        //                  if is null - throw an exception
+        //              return bt.capacity
+        //          }
+        //          catch 
+        //          { 
+        //              Errorhandler.handle.....
+        //          }
         public double GetMaxCapacityByBinType(int binTypeId)
         {
             LUT_BinType bt;
