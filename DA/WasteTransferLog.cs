@@ -18,6 +18,7 @@ namespace DAL
         public int TruckId { get; set; }
         public int BinId { get; set; }
         public double TransferedCapacity { get; set; }
+        public System.DateTime CreatedDate { get; set; }
     
         public virtual Bin Bin { get; set; }
         public virtual Truck Truck { get; set; }

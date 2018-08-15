@@ -92,6 +92,7 @@ warning 6002: The table/view 'WasteManager.dbo.BuildingWasteTransferWeekdays' do
           <Property Name="TruckId" Type="int" Nullable="false" />
           <Property Name="BinId" Type="int" Nullable="false" />
           <Property Name="TransferedCapacity" Type="float" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
         </EntityType>
         <Association Name="FK_Bin_BinLog#BinId">
           <End Role="Bin" Type="Self.Bin" Multiplicity="1" />
@@ -416,6 +417,7 @@ warning 6002: The table/view 'WasteManager.dbo.BuildingWasteTransferWeekdays' do
           <Property Name="TransferedCapacity" Type="Double" Nullable="false" />
           <NavigationProperty Name="Bin" Relationship="WasteManagerModel.FK_Bin_WasteTransferLog_BinId" FromRole="WasteTransferLog" ToRole="Bin" />
           <NavigationProperty Name="Truck" Relationship="WasteManagerModel.FK_Truck_WasteTransferLog_TruckId" FromRole="WasteTransferLog" ToRole="Truck" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <Association Name="FK_Bin_BinLog_BinId">
           <End Type="WasteManagerModel.Bin" Role="Bin" Multiplicity="1" />
@@ -603,6 +605,7 @@ warning 6002: The table/view 'WasteManager.dbo.BuildingWasteTransferWeekdays' do
           <EntitySetMapping Name="WasteTransferLogs">
             <EntityTypeMapping TypeName="WasteManagerModel.WasteTransferLog">
               <MappingFragment StoreEntitySet="WasteTransferLog">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="TransferedCapacity" ColumnName="TransferedCapacity" />
                 <ScalarProperty Name="BinId" ColumnName="BinId" />
                 <ScalarProperty Name="TruckId" ColumnName="TruckId" />

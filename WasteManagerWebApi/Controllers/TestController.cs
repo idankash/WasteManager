@@ -8,13 +8,15 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using BL.AtomicDataModels;
+using System.Web.Http.Cors;
 
 namespace WasteManagerWebApi.Controllers
 {
+    [EnableCors(origins:"*", headers:"*",methods:"*")]    
     public class TestController : BaseController
     {
         [HttpGet]
-        public bool test()
+        public bool test()  
         {
             Logger.Instance.WriteInfo("test controller", this);
             return true;

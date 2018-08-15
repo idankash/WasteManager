@@ -94,20 +94,52 @@ namespace BL
 
         public void ClearingBins(List<Bin> binList, int truckId, DateTime currentDateTime)  //Go over all the bins and unloading them.
         {
-            Truck truck = GetTruck(truckId);
-
-            foreach(Bin bin in binList)
+            try
             {
-                truck.CurrentCapacity += bin.CurrentCapacity;
-                this.UpdateTruck(truck);
+                Truck truck = GetTruck(truckId);
 
-                bin.CurrentCapacity = 0;
-                using (BinBusinessLogic binBl = new BinBusinessLogic(this.db))
+                foreach(Bin bin in binList)
                 {
-                    binBl.UpdateBin(bin, currentDateTime);
+                    double transferredCapacity = bin.CurrentCapacity;
+                    truck.CurrentCapacity += transferredCapacity;
+                    this.UpdateTruck(truck);
+
+                    bin.CurrentCapacity = 0;
+                    using (BinBusinessLogic binBl = new BinBusinessLogic(this.db))
+                    {
+                        binBl.UpdateBin(bin, currentDateTime);
+                    }
+
+                    AddWasteTransferLog(truck.TruckId, bin.BinId, transferredCapacity, currentDateTime);
 
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
 
+        }
+
+        private void AddWasteTransferLog(int truckId, int binId, double transferredCapacity, DateTime currentDateTime)
+        {
+            try
+            {
+                WasteTransferLog wasteTransferLog = new WasteTransferLog()
+                {
+                    TruckId = truckId,
+                    BinId = binId,
+                    TransferedCapacity = transferredCapacity,
+                    CreatedDate = currentDateTime
+                };
+
+                this.db.WasteTransferLogs.Add(wasteTransferLog);
+
+                this.db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
             }
         }
     }
