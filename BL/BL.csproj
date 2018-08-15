@@ -50,6 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AtomicDataModels\BinData.cs" />
+    <Compile Include="AtomicDataModels\Enums.cs" />
+    <Compile Include="AtomicDataModels\Suggestion.cs" />
     <Compile Include="BusinessLogic\BaseBusinessLogic.cs" />
     <Compile Include="BusinessLogic\BinBusinessLogic.cs" />
     <Compile Include="BusinessLogic\TruckBusinessLogic.cs" />
