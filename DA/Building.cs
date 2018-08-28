@@ -17,8 +17,8 @@ namespace DAL
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Building()
         {
-            this.Bins = new HashSet<Bin>();
             this.LUT_Weekdays = new HashSet<LUT_Weekdays>();
+            this.Bins = new HashSet<Bin>();
         }
     
         public int BuildingId { get; set; }
@@ -27,10 +27,10 @@ namespace DAL
         public double TrashDisposalArea { get; set; }
         public int AreaId { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Bin> Bins { get; set; }
         public virtual LUT_Area LUT_Area { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LUT_Weekdays> LUT_Weekdays { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Bin> Bins { get; set; }
     }
 }

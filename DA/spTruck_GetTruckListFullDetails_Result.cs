@@ -10,17 +10,15 @@
 namespace DAL
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class WasteTransferLog
+    public partial class spTruck_GetTruckListFullDetails_Result
     {
-        public int WasteCollectionId { get; set; }
         public int TruckId { get; set; }
-        public int BinId { get; set; }
-        public double TransferedCapacity { get; set; }
-        public System.DateTime CreatedDate { get; set; }
-    
-        public virtual Truck Truck { get; set; }
-        public virtual Bin Bin { get; set; }
+        public int TruckTypeId { get; set; }
+        public string TruckTypeDesc { get; set; }
+        public double CurrentCapacity { get; set; }
+        public Nullable<int> AreaId { get; set; }
+        public string AreaDesc { get; set; }
+        public double Capacity { get; set; }
     }
 }

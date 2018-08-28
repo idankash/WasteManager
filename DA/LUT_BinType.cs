@@ -23,7 +23,7 @@ namespace DAL
         public int BinTypeId { get; set; }
         public string BinTypeDesc { get; set; }
         public double Capacity { get; set; }
-        public Nullable<double> BinTrashDisposalArea { get; set; }
+        public double BinTrashDisposalArea { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Bin> Bins { get; set; }

@@ -1,4 +1,5 @@
 ﻿using BL.AtomicDataModels;
+
 using DAL;
 using FND;
 using System;
@@ -23,65 +24,75 @@ namespace BL
 
         // TRUCK - CRUD 
 
-        // TODO - Change the return type to List<TruckData>   (first, we need to impl' TruckData ofcourse...)
-        //        Do it like we did in binlogic.getallbins()  
-        public List<Truck> GetAllTrucks()
+        public List<TruckData> GetAllTrucks()
         {
+            List<Truck> dbTrucks = null;
+            List<TruckData> trucks = new List<TruckData>();
+
             try
             {
-                return this.db.Trucks.ToList();
-            }
-            catch (Exception ex)
-            {
-                throw ErrorHandler.Handle(ex, this);
-            }
-        }
+                dbTrucks = this.db.Trucks.ToList();
 
-        // TODO - change return type to TruckData
-        // TODO - change input parameter from 'id' to 'truckId'
-        public Truck GetTruck(int id)
-        {
-            try
-            {
-                return this.db.Trucks.Where(x => x.TruckId == id).SingleOrDefault();
-            }
-            catch (Exception ex)
-            {
-                throw ErrorHandler.Handle(ex, this);
-            }
-        }
-
-        // TODO - change input parameter to TruckData
-        //          Inside the body of the method we'll create a new truck of type Truck,
-        //          and then assign it's properties - truck.someProp = truckData.someProp
-        //          lastly we'll use    this.db.Trucks.Add(truck); and save changes...
-        public Truck AddNewTruck(Truck newTruck)
-        {
-            try
-            {
-                this.db.Trucks.Add(newTruck);
-                this.db.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw ErrorHandler.Handle(ex, this);
-            }
-
-            return newTruck;
-        }
-
-        // TODO - Same goes here, your input parameter is going to be TruckData because that's what the client knows...
-        //  So you'll get the Truck by it's id,
-        //  but then you'll assign each field like  'dbTruck.someProp = updatedTruckData.someProp'
-        public void UpdateTruck(Truck updatedTruck)
-        {
-            try
-            {
-                Truck truck = this.db.Trucks.Where(x => x.TruckId == updatedTruck.TruckId).SingleOrDefault();
-                if (truck != null)
+                TruckData truckData;
+                foreach (Truck dbTruck in dbTrucks)
                 {
-                    truck = updatedTruck;
+                    truckData = DbTruckToTruckData(dbTruck);
+                    trucks.Add(truckData);
                 }
+                return trucks;
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
+        public TruckData GetTruck(int truckId)
+        {
+            Truck truck;
+            try
+            {
+                truck = this.db.Trucks.Where(x => x.TruckId == truckId).SingleOrDefault();
+                TruckData truckData = DbTruckToTruckData(truck);
+                return truckData;
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
+        public TruckData AddNewTruck(TruckData newTruck)
+        {
+            try
+            {
+                Truck truck = TruckDataToDbTruck(newTruck);
+
+                this.db.Trucks.Add(truck);
+                this.db.SaveChanges();
+                return newTruck;
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
+        public void UpdateTruck(TruckData updatedTruck)
+        {
+            try
+            {
+                Truck dbTruck = this.db.Trucks.Where(x => x.TruckId == updatedTruck.truckId).SingleOrDefault();
+                if (dbTruck == null)
+                {
+                    throw new Exception("Truck not found");
+                }
+
+                dbTruck.TruckId = updatedTruck.truckId;
+                dbTruck.TruckTypeId = updatedTruck.truckTypeId;
+                dbTruck.AreaId = updatedTruck.areaId;
+                dbTruck.CurrentCapacity = updatedTruck.currentCapacity;
+
                 this.db.SaveChanges();
             }
             catch (Exception ex)
@@ -89,14 +100,12 @@ namespace BL
                 throw ErrorHandler.Handle(ex, this);
             }
         }
-        
 
-        // TODO - change input parameter from 'id' to 'truckId'
-        public void DeleteTruck(int id)
+        public void DeleteTruck(int truckId)
         {
             try
             {
-                Truck truck = this.db.Trucks.Where(x => x.TruckId == id).SingleOrDefault();
+                Truck truck = this.db.Trucks.Where(x => x.TruckId == truckId).SingleOrDefault();
                 this.db.Trucks.Remove(truck);
                 this.db.SaveChanges();
             }
@@ -106,29 +115,29 @@ namespace BL
             }
         }
 
-        // TODO -   who is calling this method? if it's the simulator only it's fine
-        //          otherwise, if the client is also calling it, then it can't pass List<Bin>, perhaps maybe pass List<int> binIds?
-
         // TODO - add TransactionScope to this method (lior).
         public void ClearingBins(List<Bin> binList, int truckId, DateTime currentDateTime)  //Go over all the bins and unloading them.
         {
             try
             {
-                Truck truck = GetTruck(truckId);
+                TruckData truck = GetTruck(truckId);
 
                 foreach (Bin bin in binList)
                 {
                     double transferredCapacity = bin.CurrentCapacity;
-                    truck.CurrentCapacity += transferredCapacity;
+                    truck.currentCapacity += transferredCapacity;
                     this.UpdateTruck(truck);
 
                     bin.CurrentCapacity = 0;
+
+                    BinData binData = null;
                     using (BinBusinessLogic binBl = new BinBusinessLogic(this.db))
                     {
-                        binBl.UpdateBin(bin, currentDateTime);
+                        binData = binBl.DbBinToBinData(bin);
+                        binBl.UpdateBin(binData, currentDateTime);
                     }
 
-                    AddWasteTransferLog(truck.TruckId, bin.BinId, transferredCapacity, currentDateTime);
+                    AddWasteTransferLog(truck.truckId, bin.BinId, transferredCapacity, currentDateTime);
 
                 }
             }
@@ -159,6 +168,35 @@ namespace BL
             {
                 throw ErrorHandler.Handle(ex, this);
             }
+        }
+
+        public Truck TruckDataToDbTruck(TruckData truckData)
+        {
+            Truck truck = new Truck()
+            {
+                TruckId = truckData.truckId,
+                TruckTypeId = truckData.truckTypeId,
+                CurrentCapacity = truckData.currentCapacity,
+                AreaId = truckData.areaId
+            };
+            return truck;
+        }
+
+        public TruckData DbTruckToTruckData(Truck truck)
+        {
+            List<spTruck_GetTruckListFullDetails_Result> dbTrucks = this.db.spTruck_GetTruckListFullDetails().ToList();
+            spTruck_GetTruckListFullDetails_Result currentTruck = dbTrucks.Find(x => x.TruckId == truck.TruckId);
+            TruckData truckData = new TruckData()
+            {
+                truckId = currentTruck.TruckId,
+                truckTypeId = currentTruck.TruckTypeId,
+                truckTypeDesc = currentTruck.TruckTypeDesc,
+                areaId = currentTruck.AreaId,
+                areaDesc = currentTruck.AreaDesc,
+                currentCapacity = currentTruck.CurrentCapacity,
+                maxCapacity = currentTruck.Capacity
+            };
+            return truckData;
         }
 
         public Suggestion HandleEfficientCapacity(Building building)
@@ -439,7 +477,9 @@ namespace BL
                     truckList.RemoveAt(indexOfbesttruck); //Removing the best truck from the available list
 
                     truckToUpdate.AreaId = area.AreaId;
-                    this.UpdateTruck(truckToUpdate); //Adding the right areaId
+
+                    TruckData truckData = DbTruckToTruckData(truckToUpdate);
+                    this.UpdateTruck(truckData); //Adding the right areaId
 
                 }
 

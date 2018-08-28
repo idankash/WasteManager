@@ -68,7 +68,7 @@ namespace WasteSimulator
                                 int maxWaste = (int)bl.GetMaxCapacityByBinType(bin.BinTypeId);
                                 bin.CurrentCapacity += rand.Next(1, maxWaste / 12);
 
-                                bl.UpdateBin(bin, SourceDateTime);
+                                bl.UpdateBin(bl.DbBinToBinData(bin), SourceDateTime);
                             }
                         }
 

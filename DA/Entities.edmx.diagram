@@ -4,8 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="c16ef0f8cbd54a23a3b0e3cc27b96684" Name="Diagram1" ZoomLevel="74">
-        <EntityTypeShape EntityType="WasteManagerModel.Bin" Width="1.5" PointX="5.25" PointY="8.25" />
+      <Diagram DiagramId="c16ef0f8cbd54a23a3b0e3cc27b96684" Name="Diagram1" ZoomLevel="85">
         <EntityTypeShape EntityType="WasteManagerModel.BinLog" Width="1.5" PointX="7.5" PointY="11.625" />
         <EntityTypeShape EntityType="WasteManagerModel.Building" Width="1.5" PointX="3" PointY="8.375" />
         <EntityTypeShape EntityType="WasteManagerModel.LUT_Area" Width="1.5" PointX="0.75" PointY="5.625" />
@@ -14,15 +13,16 @@
         <EntityTypeShape EntityType="WasteManagerModel.LUT_Weekdays" Width="1.5" PointX="5.25" PointY="12.375" />
         <EntityTypeShape EntityType="WasteManagerModel.Truck" Width="1.5" PointX="3" PointY="4.375" />
         <EntityTypeShape EntityType="WasteManagerModel.WasteTransferLog" Width="1.5" PointX="7.5" PointY="6.625" />
-        <AssociationConnector Association="WasteManagerModel.FK_Bin_BinLog_BinId" />
-        <AssociationConnector Association="WasteManagerModel.FK_Bin_Building_buildingId" />
-        <AssociationConnector Association="WasteManagerModel.FK_Bin_LUT_BinType_BinTypeId" />
-        <AssociationConnector Association="WasteManagerModel.FK_Bin_WasteTransferLog_BinId" />
         <AssociationConnector Association="WasteManagerModel.FK_Building_LUT_Area_AreaId" />
         <AssociationConnector Association="WasteManagerModel.FK_Truck_LUT_Area_AreaId" />
         <AssociationConnector Association="WasteManagerModel.FK_LUT_TruckType_Truck_TruckTypeId" />
         <AssociationConnector Association="WasteManagerModel.FK_Truck_WasteTransferLog_TruckId" />
         <AssociationConnector Association="WasteManagerModel.BuildingWasteTransferWeekdays" />
+        <EntityTypeShape EntityType="WasteManagerModel.Bin" Width="1.5" PointX="5.25" PointY="8.25" />
+        <AssociationConnector Association="WasteManagerModel.FK_Bin_BinLog_BinId" />
+        <AssociationConnector Association="WasteManagerModel.FK_Bin_Building_buildingId" />
+        <AssociationConnector Association="WasteManagerModel.FK_Bin_LUT_BinType_BinTypeId" />
+        <AssociationConnector Association="WasteManagerModel.FK_Bin_WasteTransferLog_BinId" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

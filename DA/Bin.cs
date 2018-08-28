@@ -24,7 +24,6 @@ namespace DAL
         public int BinId { get; set; }
         public int BinTypeId { get; set; }
         public double CurrentCapacity { get; set; }
-        public bool IsInUse { get; set; }
         public Nullable<int> BuildingId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

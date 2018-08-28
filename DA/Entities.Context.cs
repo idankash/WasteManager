@@ -12,6 +12,8 @@ namespace DAL
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class WasteManagerEntities : DbContext
     {
@@ -25,7 +27,6 @@ namespace DAL
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Bin> Bins { get; set; }
         public virtual DbSet<BinLog> BinLogs { get; set; }
         public virtual DbSet<Building> Buildings { get; set; }
         public virtual DbSet<LUT_Area> LUT_Area { get; set; }
@@ -34,5 +35,16 @@ namespace DAL
         public virtual DbSet<LUT_Weekdays> LUT_Weekdays { get; set; }
         public virtual DbSet<Truck> Trucks { get; set; }
         public virtual DbSet<WasteTransferLog> WasteTransferLogs { get; set; }
+        public virtual DbSet<Bin> Bins { get; set; }
+    
+        public virtual ObjectResult<spBin_GetBinListFullDetails_Result> spBin_GetBinListFullDetails()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spBin_GetBinListFullDetails_Result>("spBin_GetBinListFullDetails");
+        }
+    
+        public virtual ObjectResult<spTruck_GetTruckListFullDetails_Result> spTruck_GetTruckListFullDetails()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spTruck_GetTruckListFullDetails_Result>("spTruck_GetTruckListFullDetails");
+        }
     }
 }
