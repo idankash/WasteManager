@@ -21,7 +21,7 @@ namespace DAL
         public double Capacity { get; set; }
         public double BinTrashDisposalArea { get; set; }
         public string BuildingAddress { get; set; }
-        public int AreaId { get; set; }
+        public Nullable<int> AreaId { get; set; }
         public string AreaDesc { get; set; }
     }
 }

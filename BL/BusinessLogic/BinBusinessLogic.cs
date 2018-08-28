@@ -55,6 +55,34 @@ namespace BL
             }
         }
 
+        public List<BinType> GetAllBinTypes()
+        {
+            try
+            {
+                List<LUT_BinType> dbBinTypes = this.db.LUT_BinType.ToList();
+
+                List<BinType> binTypes = new List<BinType>();
+
+                foreach (LUT_BinType dbBin in dbBinTypes)
+                {
+                    BinType binType = new BinType()
+                    {
+                        binTypeId = dbBin.BinTypeId,
+                        binTypeDesc = dbBin.BinTypeDesc,
+                        capacity = dbBin.Capacity,
+                        binTrashDisposalArea = dbBin.BinTrashDisposalArea
+                    };
+
+                    binTypes.Add(binType);
+                }
+
+                return binTypes;
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
 
         public List<Bin> GetAllBins()
         {
@@ -85,7 +113,7 @@ namespace BL
             try
             {
                 this.db.Bins.Add(newBin);
-                this.db.SaveChanges();      
+                this.db.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -98,7 +126,7 @@ namespace BL
         public void UpdateBin(BinData updatedBin, DateTime dt)
         {
             try
-            {   
+            {
                 Bin oldBin = this.db.Bins.Where(x => x.BinId == updatedBin.binId).SingleOrDefault();
                 if (oldBin == null)
                 {
@@ -107,7 +135,7 @@ namespace BL
 
                 oldBin = BinDataToDbBin(updatedBin);
 
-                AddNewBinLog(oldBin, dt);         
+                AddNewBinLog(oldBin, dt);
                 this.db.SaveChanges();
             }
             catch (Exception ex)

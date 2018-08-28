@@ -10,6 +10,6 @@ namespace BL.AtomicDataModels
     {
         public SuggestionAction suggestionAction { get; set; }
         public SuggestionEntity suggestionEntity { get; set; }
-        public List<int> EntityIds { get; set; }
+        public List<int> entityIds { get; set; }
     }
 }

@@ -8,9 +8,8 @@ namespace WasteManagerWebApi.ViewDataModels
 {
     public class BinManagementViewModel
     {
-        List<BinData> bins { get; set; }
-        List<Area> areas { get; set; }
-        List<BinType> binTypes { get; set;}
-
+        public List<BinData> bins { get; set; }
+        public List<LutItem> areas { get; set; }
+        public List<BinType> binTypes { get; set;}
     }
 }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BL.AtomicDataModels
 {
-    public class Area
+    public class LutItem
     {
-        public int areaId { get; set; }
-        public string areaDesc { get; set; }
+        public int id { get; set; }
+        public string desc { get; set; }
     }
 }

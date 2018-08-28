@@ -49,16 +49,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AtomicDataModels\Area.cs" />
     <Compile Include="AtomicDataModels\BinData.cs" />
     <Compile Include="AtomicDataModels\BinType.cs" />
     <Compile Include="AtomicDataModels\BuildingData.cs" />
     <Compile Include="AtomicDataModels\Enums.cs" />
+    <Compile Include="AtomicDataModels\LutItem.cs" />
     <Compile Include="AtomicDataModels\Suggestion.cs" />
     <Compile Include="AtomicDataModels\TruckData.cs" />
     <Compile Include="AtomicDataModels\TruckType.cs" />
     <Compile Include="BusinessLogic\BaseBusinessLogic.cs" />
     <Compile Include="BusinessLogic\BinBusinessLogic.cs" />
+    <Compile Include="BusinessLogic\LutLogic.cs" />
     <Compile Include="BusinessLogic\TruckBusinessLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

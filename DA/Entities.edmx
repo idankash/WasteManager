@@ -469,8 +469,8 @@ warning 6002: The table/view 'WasteManager.dbo.BuildingWasteTransferWeekdays' do
           <Property Type="Double" Name="Capacity" Nullable="false" />
           <Property Type="Double" Name="BinTrashDisposalArea" Nullable="false" />
           <Property Type="String" Name="BuildingAddress" Nullable="true" MaxLength="151" />
-          <Property Type="Int32" Name="AreaId" Nullable="false" />
-          <Property Type="String" Name="AreaDesc" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="AreaId" Nullable="true" />
+          <Property Type="String" Name="AreaDesc" Nullable="true" MaxLength="50" />
         </ComplexType>
         <EntityType Name="Bin">
           <Key>

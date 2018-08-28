@@ -238,7 +238,7 @@ namespace BL
                         {
                             suggestionAction = SuggestionAction.add,
                             suggestionEntity = SuggestionEntity.Day,
-                            EntityIds = new List<int>()
+                            entityIds = new List<int>()
                                     {
                                         addDayId
                                     }
@@ -268,7 +268,7 @@ namespace BL
                                 {
                                     suggestionAction = SuggestionAction.add,
                                     suggestionEntity = SuggestionEntity.Bin,
-                                    EntityIds = new List<int>()
+                                    entityIds = new List<int>()
                                     {
                                         binType.BinTypeId
                                     }
@@ -308,7 +308,7 @@ namespace BL
                                 {
                                     suggestionAction = SuggestionAction.add,
                                     suggestionEntity = SuggestionEntity.Bin,
-                                    EntityIds = bestCombo
+                                    entityIds = bestCombo
                                 };
                                 return suj; //Best combo
                             }
@@ -326,7 +326,7 @@ namespace BL
                         {
                             suggestionAction = SuggestionAction.remove,
                             suggestionEntity = SuggestionEntity.Day,
-                            EntityIds = new List<int>()
+                            entityIds = new List<int>()
                                     {
                                         dayId
                                     }
@@ -346,7 +346,7 @@ namespace BL
                         {
                             suggestionAction = SuggestionAction.remove,
                             suggestionEntity = SuggestionEntity.Bin,
-                            EntityIds = new List<int>()
+                            entityIds = new List<int>()
                                     {
                                         binId
                                     }
