@@ -29,7 +29,7 @@ namespace BL.BusinessLogic
 
                 List<LUT_Area> dbLutAreaList = this.db.LUT_Area.ToList();
                 List<LutItem> lutArea = new List<LutItem>();
-                foreach (var dbLutAreaItem in dbLutAreaList)
+                foreach (LUT_Area dbLutAreaItem in dbLutAreaList)
                 {
                     LutItem lutAreaItem = new LutItem()
                     {

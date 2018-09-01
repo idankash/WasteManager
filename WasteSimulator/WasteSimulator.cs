@@ -35,9 +35,10 @@ namespace WasteSimulator
             {
                 using (BinBusinessLogic bl = new BinBusinessLogic())
                 {
-                    List<Bin> bins = bl.GetAllBins();
+                    //List<Bin> bins = bl.GetAllBins(); error
                     FillAllBinsRandomly();
-                    return bins;
+                    //return bins;
+                    return null;
                 }
             }
             catch (Exception ex)
@@ -55,7 +56,7 @@ namespace WasteSimulator
                 Logger.Instance.WriteInfo("Current date " + SourceDateTime.ToString(), this);
                 using (BinBusinessLogic bl = new BinBusinessLogic())
                 {
-                    binList = bl.GetAllBins();
+                    binList = null;//bl.GetAllBins(); error
 
                     for (int i = 0; i < 12; i++)
                     {

@@ -84,11 +84,18 @@ namespace BL
             }
         }
 
-        public List<Bin> GetAllBins()
+        public List<BinData> GetAllBins()
         {
             try
             {
-                return this.db.Bins.ToList();
+                List<Bin> binList = this.db.Bins.ToList();
+                List<BinData> binDataList = new List<BinData>();
+                
+                foreach(Bin bin in binList)
+                {
+                    binDataList.Add(DbBinToBinData(bin));
+                }
+                return binDataList;
             }
             catch (Exception ex)
             {
@@ -108,11 +115,13 @@ namespace BL
             }
         }
 
-        public Bin AddNewBin(Bin newBin)
+        public Bin AddNewBin(BinData newBin)
         {
+            Bin dbBin;
             try
             {
-                this.db.Bins.Add(newBin);
+                dbBin = BinDataToDbBin(newBin);
+                this.db.Bins.Add(dbBin);
                 this.db.SaveChanges();
             }
             catch (Exception ex)
@@ -120,7 +129,7 @@ namespace BL
                 throw ErrorHandler.Handle(ex, this);
             }
 
-            return newBin;
+            return dbBin;
         }
 
         public void UpdateBin(BinData updatedBin, DateTime dt)

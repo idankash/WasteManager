@@ -1,6 +1,7 @@
 ﻿using BL;
 using BL.AtomicDataModels;
 using BL.BusinessLogic;
+using DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,11 @@ namespace WasteManagerWebApi.Controllers
                     viewModel.areas = lutLogic.GetLutArea();
                 }
 
+                using (BuildingsLogic buildingLogic = new BuildingsLogic())
+                {
+                    viewModel.buildings = buildingLogic.GetBuildings();
+                }
+
                 return viewModel;
             }
             catch (Exception ex)
@@ -39,12 +45,69 @@ namespace WasteManagerWebApi.Controllers
                 throw ex;
             }
         }
+        [HttpPost]
+        public Bin AddNewBin(BinData newBin)
+        {
+            try
+            {
+                using (BinBusinessLogic binBusinessLogic = new BinBusinessLogic())
+                {
+                    return binBusinessLogic.AddNewBin(newBin);
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
 
-        //[HttpGet]
-        //public List<BinData> GetAllBins()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        [HttpGet]
+        public List<BinData> GetAllBins()
+        {
+            try
+            {
+                using (BinBusinessLogic binBusinessLogic = new BinBusinessLogic())
+                {
+                    return binBusinessLogic.GetAllBins();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpDelete]
+        public void DeleteBin(int binId)
+        {
+            try
+            {
+                using (BinBusinessLogic binBusinessLogic = new BinBusinessLogic())
+                {
+                    binBusinessLogic.DeleteBin(binId);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public void UpdateBin(BinData updatedBin)
+        {
+            try
+            {
+                using (BinBusinessLogic binBusinessLogic = new BinBusinessLogic())
+                {
+                    binBusinessLogic.UpdateBin(updatedBin , DateTime.Now);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
     }
 }

@@ -11,5 +11,6 @@ namespace WasteManagerWebApi.ViewDataModels
         public List<BinData> bins { get; set; }
         public List<LutItem> areas { get; set; }
         public List<BinType> binTypes { get; set;}
+        public List<BuildingData> buildings { get; set; }
     }
 }

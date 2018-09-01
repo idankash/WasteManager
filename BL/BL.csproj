@@ -59,6 +59,7 @@
     <Compile Include="AtomicDataModels\TruckType.cs" />
     <Compile Include="BusinessLogic\BaseBusinessLogic.cs" />
     <Compile Include="BusinessLogic\BinBusinessLogic.cs" />
+    <Compile Include="BusinessLogic\BuildingsLogic.cs" />
     <Compile Include="BusinessLogic\LutLogic.cs" />
     <Compile Include="BusinessLogic\TruckBusinessLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

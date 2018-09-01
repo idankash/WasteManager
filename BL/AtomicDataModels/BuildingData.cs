@@ -8,5 +8,9 @@ namespace BL.AtomicDataModels
 {
     public class BuildingData
     {
+        public string streetName { get; set; }
+        public string streetNumber { get; set; }
+        public int buildingId { get; set; }
+        public int areaId { get; set; }
     }
 }
