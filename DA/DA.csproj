@@ -91,6 +91,9 @@
     <Compile Include="spBin_GetBinListFullDetails_Result.cs">
       <DependentUpon>Entities.tt</DependentUpon>
     </Compile>
+    <Compile Include="spBin_GetSingleBinFullDetails_Result.cs">
+      <DependentUpon>Entities.tt</DependentUpon>
+    </Compile>
     <Compile Include="spTruck_GetTruckListFullDetails_Result.cs">
       <DependentUpon>Entities.tt</DependentUpon>
     </Compile>

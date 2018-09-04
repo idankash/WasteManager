@@ -118,33 +118,37 @@ namespace BL
         // TODO - add TransactionScope to this method (lior).
         public void ClearingBins(List<Bin> binList, int truckId, DateTime currentDateTime)  //Go over all the bins and unloading them.
         {
-            try
-            {
-                TruckData truck = GetTruck(truckId);
+            // $$ TODO IDAN BROKEN!
+            //      CYCLIC! 
+            //      Overload binBl.UpdateBin to the simulator's needs.
+            
+            //try
+            //{
+            //    TruckData truck = GetTruck(truckId);
 
-                foreach (Bin bin in binList)
-                {
-                    double transferredCapacity = bin.CurrentCapacity;
-                    truck.currentCapacity += transferredCapacity;
-                    this.UpdateTruck(truck);
+            //    foreach (Bin bin in binList)
+            //    {
+            //        double transferredCapacity = bin.CurrentCapacity;
+            //        truck.currentCapacity += transferredCapacity;
+            //        this.UpdateTruck(truck);
 
-                    bin.CurrentCapacity = 0;
+            //        bin.CurrentCapacity = 0;
 
-                    BinData binData = null;
-                    using (BinBusinessLogic binBl = new BinBusinessLogic(this.db))
-                    {
-                        binData = binBl.DbBinToBinData(bin);
-                        binBl.UpdateBin(binData, currentDateTime);
-                    }
+            //        BinData binData = null;
+            //        using (BinBusinessLogic binBl = new BinBusinessLogic(this.db))
+            //        {
+            //            binData = binBl.DbBinToBinData(bin);
+            //            binBl.UpdateBin(binData, currentDateTime);
+            //        }
 
-                    AddWasteTransferLog(truck.truckId, bin.BinId, transferredCapacity, currentDateTime);
+            //        AddWasteTransferLog(truck.truckId, bin.BinId, transferredCapacity, currentDateTime);
 
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ErrorHandler.Handle(ex, this);
-            }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw ErrorHandler.Handle(ex, this);
+            //}
 
         }
 

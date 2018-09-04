@@ -88,12 +88,12 @@ namespace BL
         {
             try
             {
-                List<Bin> binList = this.db.Bins.ToList();
+                List<spBin_GetBinListFullDetails_Result> dbBins = this.db.spBin_GetBinListFullDetails().ToList();
                 List<BinData> binDataList = new List<BinData>();
-                
-                foreach(Bin bin in binList)
+
+                foreach (var dbBin in dbBins)
                 {
-                    binDataList.Add(DbBinToBinData(bin));
+                    binDataList.Add(DbBinToBinData(dbBin));
                 }
                 return binDataList;
             }
@@ -120,7 +120,8 @@ namespace BL
             Bin dbBin;
             try
             {
-                dbBin = BinDataToDbBin(newBin);
+                dbBin = new Bin();
+                BinDataToDbBin(dbBin, newBin);
                 this.db.Bins.Add(dbBin);
                 this.db.SaveChanges();
             }
@@ -142,7 +143,7 @@ namespace BL
                     throw new Exception("Bin not found.");
                 }
 
-                oldBin = BinDataToDbBin(updatedBin);
+                BinDataToDbBin(oldBin, updatedBin);
 
                 AddNewBinLog(oldBin, dt);
                 this.db.SaveChanges();
@@ -211,35 +212,28 @@ namespace BL
             return bt.Capacity;
         }
 
-        public BinData DbBinToBinData(Bin dbBin)
+        public BinData DbBinToBinData(spBin_GetBinListFullDetails_Result dbBin)
         {
-            List<spBin_GetBinListFullDetails_Result> dbBins = this.db.spBin_GetBinListFullDetails().ToList();
-            spBin_GetBinListFullDetails_Result currentBin = dbBins.Find(x => x.BinId == dbBin.BinId);
             BinData binData = new BinData()
             {
-                binId = currentBin.BinId,
-                binTypeId = currentBin.BinTypeId,
-                binTypeDesc = currentBin.BinTypeDesc,
-                cityAddress = currentBin.AreaDesc,
-                streetAddress = currentBin.BuildingAddress,
-                currentCapacity = currentBin.CurrentCapacity,
-                maxCapacity = currentBin.Capacity,
-                binTrashDisposalArea = currentBin.BinTrashDisposalArea,
-                buildingId = currentBin.BuildingId// buildingid is nullable 
+                binId = dbBin.BinId,
+                binTypeId = dbBin.BinTypeId,
+                binTypeDesc = dbBin.BinTypeDesc,
+                cityAddress = dbBin.AreaDesc,
+                streetAddress = dbBin.BuildingAddress,
+                currentCapacity = dbBin.CurrentCapacity,
+                maxCapacity = dbBin.Capacity,
+                binTrashDisposalArea = dbBin.BinTrashDisposalArea,
+                buildingId = dbBin.BuildingId// buildingid is nullable 
             };
             return binData;
         }
 
-        public Bin BinDataToDbBin(BinData binData)
+        public void BinDataToDbBin(Bin bin, BinData binData)
         {
-            Bin bin = new Bin()
-            {
-                BinId = binData.binId,
-                BinTypeId = binData.binTypeId,
-                CurrentCapacity = binData.currentCapacity,
-                BuildingId = binData.buildingId
-            };
-            return bin;
+            bin.BinTypeId = binData.binTypeId;
+            bin.CurrentCapacity = binData.currentCapacity;
+            bin.BuildingId = binData.buildingId;
         }
     }
 }

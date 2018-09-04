@@ -47,40 +47,43 @@ namespace WasteSimulator
             }
         }
 
+        // $$ TODO IDAN BROKEN!
+        //      CYCLIC! 
+        //      Overload binBl.UpdateBin to the simulator's needs.
         public void FillAllBinsRandomly()
         {
-            List<Bin> binList;
+            //    List<Bin> binList;
 
-            while ((Convert.ToBoolean(SourceDateTime.Date.CompareTo(DestinationDateTime.Date))))
-            {
-                Logger.Instance.WriteInfo("Current date " + SourceDateTime.ToString(), this);
-                using (BinBusinessLogic bl = new BinBusinessLogic())
-                {
-                    binList = null;//bl.GetAllBins(); error
+            //    while ((Convert.ToBoolean(SourceDateTime.Date.CompareTo(DestinationDateTime.Date))))
+            //    {
+            //        Logger.Instance.WriteInfo("Current date " + SourceDateTime.ToString(), this);
+            //        using (BinBusinessLogic bl = new BinBusinessLogic())
+            //        {
+            //            binList = null;//bl.GetAllBins(); error
 
-                    for (int i = 0; i < 12; i++)
-                    {
-                        // It means the client want to throw his garbage.. 
+            //            for (int i = 0; i < 12; i++)
+            //            {
+            //                // It means the client want to throw his garbage.. 
 
-                        foreach (Bin bin in binList)
-                        {
-                            if (rand.Next(0, 2) == 1)
-                            {
-                                int maxWaste = (int)bl.GetMaxCapacityByBinType(bin.BinTypeId);
-                                bin.CurrentCapacity += rand.Next(1, maxWaste / 12);
+            //                foreach (Bin bin in binList)
+            //                {
+            //                    if (rand.Next(0, 2) == 1)
+            //                    {
+            //                        int maxWaste = (int)bl.GetMaxCapacityByBinType(bin.BinTypeId);
+            //                        bin.CurrentCapacity += rand.Next(1, maxWaste / 12);
 
-                                bl.UpdateBin(bl.DbBinToBinData(bin), SourceDateTime);
-                            }
-                        }
+            //                        bl.UpdateBin(bl.DbBinToBinData(bin), SourceDateTime);
+            //                    }
+            //                }
 
-                        SourceDateTime = SourceDateTime.AddHours(2);
-                    }
-                }
-                using (TruckBusinessLogic truckBl = new TruckBusinessLogic())
-                {
-                    truckBl.ClearingBins(binList, 1, SourceDateTime);
-                }
-            }
+            //                SourceDateTime = SourceDateTime.AddHours(2);
+            //            }
+            //        }
+            //        using (TruckBusinessLogic truckBl = new TruckBusinessLogic())
+            //        {
+            //            truckBl.ClearingBins(binList, 1, SourceDateTime);
+            //        }
+            //    }
         }
     }
 }

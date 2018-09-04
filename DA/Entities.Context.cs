@@ -46,5 +46,14 @@ namespace DAL
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spTruck_GetTruckListFullDetails_Result>("spTruck_GetTruckListFullDetails");
         }
+    
+        public virtual ObjectResult<spBin_GetSingleBinFullDetails_Result> spBin_GetSingleBinFullDetails(Nullable<int> binId)
+        {
+            var binIdParameter = binId.HasValue ?
+                new ObjectParameter("binId", binId) :
+                new ObjectParameter("binId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spBin_GetSingleBinFullDetails_Result>("spBin_GetSingleBinFullDetails", binIdParameter);
+        }
     }
 }

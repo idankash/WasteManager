@@ -214,6 +214,9 @@ warning 6002: The table/view 'WasteManager.dbo.BuildingWasteTransferWeekdays' do
           </ReferentialConstraint>
         </Association>
         <Function Name="spBin_GetBinListFullDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spBin_GetSingleBinFullDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="binId" Type="int" Mode="In" />
+        </Function>
         <Function Name="spTruck_GetTruckListFullDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="WasteManagerModelStoreContainer">
           <EntitySet Name="Bin" EntityType="Self.Bin" Schema="dbo" store:Type="Tables" />
@@ -324,6 +327,9 @@ warning 6002: The table/view 'WasteManager.dbo.BuildingWasteTransferWeekdays' do
             <End Role="WasteTransferLog" EntitySet="WasteTransferLogs" />
           </AssociationSet>
           <FunctionImport Name="spTruck_GetTruckListFullDetails" ReturnType="Collection(WasteManagerModel.spTruck_GetTruckListFullDetails_Result)" />
+          <FunctionImport Name="spBin_GetSingleBinFullDetails" ReturnType="Collection(WasteManagerModel.spBin_GetSingleBinFullDetails_Result)">
+            <Parameter Name="binId" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="BinLog">
           <Key>
@@ -542,6 +548,18 @@ warning 6002: The table/view 'WasteManager.dbo.BuildingWasteTransferWeekdays' do
           <Property Type="String" Name="AreaDesc" Nullable="false" MaxLength="50" />
           <Property Type="Double" Name="Capacity" Nullable="false" />
         </ComplexType>
+        <ComplexType Name="spBin_GetSingleBinFullDetails_Result">
+          <Property Type="Int32" Name="BinId" Nullable="false" />
+          <Property Type="Int32" Name="BinTypeId" Nullable="false" />
+          <Property Type="Double" Name="CurrentCapacity" Nullable="false" />
+          <Property Type="Int32" Name="BuildingId" Nullable="true" />
+          <Property Type="String" Name="BinTypeDesc" Nullable="false" MaxLength="100" />
+          <Property Type="Double" Name="Capacity" Nullable="false" />
+          <Property Type="Double" Name="BinTrashDisposalArea" Nullable="false" />
+          <Property Type="String" Name="BuildingAddress" Nullable="true" MaxLength="151" />
+          <Property Type="Int32" Name="AreaId" Nullable="true" />
+          <Property Type="String" Name="AreaDesc" Nullable="true" MaxLength="50" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -669,6 +687,22 @@ warning 6002: The table/view 'WasteManager.dbo.BuildingWasteTransferWeekdays' do
                 <ScalarProperty Name="AreaId" ColumnName="AreaId" />
                 <ScalarProperty Name="AreaDesc" ColumnName="AreaDesc" />
                 <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spBin_GetSingleBinFullDetails" FunctionName="WasteManagerModel.Store.spBin_GetSingleBinFullDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="WasteManagerModel.spBin_GetSingleBinFullDetails_Result">
+                <ScalarProperty Name="BinId" ColumnName="BinId" />
+                <ScalarProperty Name="BinTypeId" ColumnName="BinTypeId" />
+                <ScalarProperty Name="CurrentCapacity" ColumnName="CurrentCapacity" />
+                <ScalarProperty Name="BuildingId" ColumnName="BuildingId" />
+                <ScalarProperty Name="BinTypeDesc" ColumnName="BinTypeDesc" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="BinTrashDisposalArea" ColumnName="BinTrashDisposalArea" />
+                <ScalarProperty Name="BuildingAddress" ColumnName="BuildingAddress" />
+                <ScalarProperty Name="AreaId" ColumnName="AreaId" />
+                <ScalarProperty Name="AreaDesc" ColumnName="AreaDesc" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
