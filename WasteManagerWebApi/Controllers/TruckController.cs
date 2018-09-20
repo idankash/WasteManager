@@ -9,7 +9,7 @@ using WasteManagerWebApi.ViewDataModels;
 
 namespace WasteManagerWebApi.Controllers
 {
-    public class TruckController : BaseController
+    public class TrucksController : BaseController
     {
         [HttpGet]
         public TruckManagementViewModel GetTruckManagementViewModel()
@@ -27,13 +27,77 @@ namespace WasteManagerWebApi.Controllers
                 {
                     viewModel.areas = lutLogic.GetLutArea();
                 }
+                return viewModel;
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            return null;
         }
-        public List<LutItem> areas { get; set; }
+
+        [HttpPost]
+        public TruckData AddNewTruck(TruckData newTruck)
+        {
+            try
+            {
+                using(TruckBusinessLogic truckBusinessLogic = new TruckBusinessLogic())
+                {
+                    return truckBusinessLogic.AddNewTruck(newTruck);
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        public List<TruckData> GetAllTrucks()
+        {
+            try
+            {
+                using(TruckBusinessLogic truckBusinessLogic = new TruckBusinessLogic())
+                {
+                    return truckBusinessLogic.GetAllTrucks();
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpDelete]
+        public void DeleteTruck(int truckId)
+        {
+            try
+            {
+                using(TruckBusinessLogic truckBusinessLogic = new TruckBusinessLogic())
+                {
+                    truckBusinessLogic.DeleteTruck(truckId);
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public void UpdateTruck(TruckData updatedTruck)
+        {
+            try
+            {
+                using (TruckBusinessLogic truckBusinessLogic = new TruckBusinessLogic())
+                {
+                    truckBusinessLogic.UpdateTruck(updatedTruck);
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }
