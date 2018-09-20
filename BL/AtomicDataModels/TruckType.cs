@@ -9,9 +9,7 @@ namespace BL.AtomicDataModels
     public class TruckType
     {
         public int truckTypeId { get; set; }
-
         public string truckTypeDesc { get; set; }
-
         public double capacity { get; set; }
     }
 }

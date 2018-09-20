@@ -62,6 +62,34 @@ namespace BL
             }
         }
 
+        public List<TruckType> GetAllTypes()
+        {
+            try
+            {
+                List<LUT_TruckType> dbtruckTypes = this.db.LUT_TruckType.ToList();
+
+                List<TruckType> truckTypes = new List<TruckType>();
+
+                foreach (LUT_TruckType dbtruck in dbtruckTypes)
+                {
+                    TruckType truckType = new TruckType()
+                    {
+                        truckTypeId = dbtruck.TruckTypeId,
+                        capacity = dbtruck.Capacity,
+                        truckTypeDesc = dbtruck.TruckTypeDesc
+                    };
+
+                    truckTypes.Add(truckType);
+                }
+
+                return truckTypes;
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
         public TruckData AddNewTruck(TruckData newTruck)
         {
             try

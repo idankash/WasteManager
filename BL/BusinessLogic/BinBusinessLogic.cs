@@ -174,7 +174,7 @@ namespace BL
             }
         }
 
-        public void DeleteBin(int binId)
+        public void DeleteBin(int binId) //idan - changed method from deleting entire entity to remove buildingId from it.
         {
             try
             {
@@ -183,7 +183,7 @@ namespace BL
                 {
                     throw new Exception("Bin not found");
                 }
-                this.db.Bins.Remove(binToRemove);
+                binToRemove.BuildingId = null;
                 this.db.SaveChanges();
             }
             catch (Exception ex)
