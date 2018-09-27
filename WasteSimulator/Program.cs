@@ -37,18 +37,13 @@ namespace WasteSimulator
 
             Logger.Instance.WriteInfo("before call sql server", null);
 
-            WasteSimulator ws = new WasteSimulator(30);
+            WasteSimulator ws = new WasteSimulator(14);
 
-            //ws.FillAllBinsRandomly();
             List<Bin> bins = ws.test();
-
 
             Logger.Instance.WriteInfo("after call sql server", null);
 
-            foreach (Bin bin in bins)
-            {
-                Console.WriteLine(bin.BinId);
-            }
+
 
 
         }

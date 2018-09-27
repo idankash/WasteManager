@@ -10,7 +10,8 @@ namespace BL.AtomicDataModels
     {
         add,
         remove,
-        change
+        change,
+        nothing
     }
 
     public enum SuggestionEntity

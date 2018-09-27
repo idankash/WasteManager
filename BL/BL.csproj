@@ -53,6 +53,7 @@
     <Compile Include="AtomicDataModels\BinType.cs" />
     <Compile Include="AtomicDataModels\BuildingData.cs" />
     <Compile Include="AtomicDataModels\Enums.cs" />
+    <Compile Include="AtomicDataModels\ImplementSuggestionData.cs" />
     <Compile Include="AtomicDataModels\LutItem.cs" />
     <Compile Include="AtomicDataModels\Suggestion.cs" />
     <Compile Include="AtomicDataModels\TruckData.cs" />
