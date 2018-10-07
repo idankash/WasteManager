@@ -67,6 +67,22 @@ namespace WasteManagerWebApi.Controllers
             }
         }
 
+        [HttpGet]
+        public TruckData GetTruck(int truckId)
+        {
+            try
+            {
+                using (TruckBusinessLogic truckBusinessLogic = new TruckBusinessLogic())
+                {
+                    return truckBusinessLogic.GetTruck(truckId);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpDelete]
         public void DeleteTruck(int truckId)
         {
@@ -98,6 +114,23 @@ namespace WasteManagerWebApi.Controllers
                 throw ex;
             }
         }
+
+        [HttpGet]
+        public int GetNumOfCleanups(int truckId)
+        {
+            try
+            {
+                using (LutLogic lutLogic = new LutLogic())
+                {
+                    return lutLogic.GetNumOfCleanups(truckId);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
     }
 }

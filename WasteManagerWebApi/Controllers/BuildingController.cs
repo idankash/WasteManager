@@ -164,13 +164,13 @@ namespace WasteManagerWebApi.Controllers
         }
 
         [HttpPost]
-        public void ImplementSuggestion([FromBody] ImplementSuggestionData implementSuggestionData)
+        public bool ImplementSuggestion([FromBody] ImplementSuggestionData implementSuggestionData)
         {
             try
             {
                 using (BuildingsLogic buildingLogic = new BuildingsLogic())
                 {
-                    buildingLogic.ImplementSuggestion(implementSuggestionData.suggestion, implementSuggestionData.buildingId);
+                    return buildingLogic.ImplementSuggestion(implementSuggestionData.suggestion, implementSuggestionData.buildingId);
                 }
             }
             catch (Exception ex)

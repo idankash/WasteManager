@@ -1,5 +1,5 @@
 ﻿using BL.AtomicDataModels;
-
+using BL.BusinessLogic;
 using DAL;
 using FND;
 using System;
@@ -268,8 +268,8 @@ namespace BL
                 truckId = currentTruck.TruckId,
                 truckTypeId = currentTruck.TruckTypeId,
                 truckTypeDesc = currentTruck.TruckTypeDesc,
-                areaId = currentTruck.AreaId,
-                areaDesc = currentTruck.AreaDesc,
+                areaId = truck.AreaId!=null? currentTruck.AreaId : null,
+                areaDesc = truck.AreaId!=null? currentTruck.AreaDesc : null,
                 currentCapacity = currentTruck.CurrentCapacity,
                 maxCapacity = currentTruck.Capacity
             };
@@ -284,40 +284,15 @@ namespace BL
 
         public List<TruckCleanUp> TruckAllocationToRegion(LUT_Area area)// return the smallest trcuk with the lowest number of cleanups
         {
-            List<LUT_TruckType> listOfTruckType;
-            DateTime lastThreeMonths = DateTime.Now.AddDays(-90); // Three months back
-            List<Building> areaBuildings;
-            List<Bin> buildingBins = new List<Bin>();
-            List<WasteTransferLog> buildingWasteTransferLog;
-            double areaAvg, sumOfTrash = 0;
-
             try
             {
-                areaBuildings = this.db.Buildings.Where(x => x.AreaId == area.AreaId).ToList();//List of all the buildings in this area  
-
-                //buildingBins = this.db.Bins.Where(x => areaBuildings.FindIndex(f => f.BuildingId == x.BuildingId) != -1).ToList();//List of all the bins in this area
-                List<Bin> allBins = this.db.Bins.ToList(); // linq doesn't like findindex same as above statement
-                foreach (Bin bin in allBins)
+                double areaAvg;
+                using (LutLogic lutLogic = new LutLogic())
                 {
-                    if(areaBuildings.FindIndex(x => x.BuildingId == bin.BuildingId) != -1)
-                    {
-                        buildingBins.Add(bin);
-                    }
+                    areaAvg = lutLogic.GetAreaAvg(area); //sumOfTrash / number of cleanup(Log size)
                 }
 
-                buildingWasteTransferLog = this.db.WasteTransferLogs.Where(x => x.CreatedDate >= lastThreeMonths).ToList(); //allWasteTransferLog from the last three months
-
-                foreach (WasteTransferLog wtl in buildingWasteTransferLog) //doing it because linq problem with:.Where(x => x.CreatedDate >= lastThreeMonths && buildingBins.FindIndex(f => f.BinId == x.BinId) != -1).ToList(); 
-                {
-                    if (buildingBins.FindIndex(x => x.BinId == wtl.BinId) != -1)
-                    {
-                        sumOfTrash += wtl.TransferedCapacity;
-                    }
-                }
-
-                areaAvg = sumOfTrash / buildingWasteTransferLog.Count(); //sumOfTrash / number of cleanup(Log size)
-
-                listOfTruckType = this.db.LUT_TruckType.ToList().OrderBy(x => x.Capacity).ToList();//All truckType order by capacity
+                List<LUT_TruckType> listOfTruckType = this.db.LUT_TruckType.ToList().OrderBy(x => x.Capacity).ToList();//All truckType order by capacity
                 List<TruckCleanUp> truckCleanupList = new List<TruckCleanUp>();
                 TruckCleanUp currentTrcuk = new TruckCleanUp();
 
@@ -378,7 +353,7 @@ namespace BL
                         }
                     }
                     if (bestTruck.typeId == bestFit.First().typeId && truckList.FindIndex(x => x.TruckTypeId == bestTruck.typeId) == -1)
-                    { //If we are here its mean that we still have area to clean but not enough trucks available
+                    { //If we are here it means that we still have area to clean but not enough trucks available
                         return 0;
                     }
 
@@ -400,6 +375,32 @@ namespace BL
                 throw ErrorHandler.Handle(ex, this);
             }
 
+        }
+        
+        public int ManuallyWorkSchedule(List<AreaData> updatedArea)
+        {
+            try
+            {
+                if (updatedArea.FindIndex(x => x.truckId == -1) != -1) //Area without truck
+                {
+                    return 0;
+                }
+
+                TruckData truck;
+                foreach(AreaData area in updatedArea)
+                {
+                    truck = GetTruck(area.truckId);
+                    truck.areaId = area.area.id;
+                    truck.areaDesc = area.area.desc;
+                    UpdateTruck(truck);
+                }
+                return 1;
+
+            }
+            catch(Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
         }
     }
 }

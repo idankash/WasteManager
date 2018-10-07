@@ -63,7 +63,7 @@ namespace BL.BusinessLogic
             }
             catch(Exception ex)
             {
-                throw ex;
+                throw ErrorHandler.Handle(ex, this);
             }
         }
 
@@ -116,7 +116,7 @@ namespace BL.BusinessLogic
             }
             catch(Exception ex)
             {
-                throw ex;
+                throw ErrorHandler.Handle(ex, this);
             }
         }
 
@@ -162,7 +162,7 @@ namespace BL.BusinessLogic
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw ErrorHandler.Handle(ex, this);
             }
         }
 
@@ -183,7 +183,7 @@ namespace BL.BusinessLogic
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw ErrorHandler.Handle(ex, this);
             }
         }
 
@@ -204,7 +204,7 @@ namespace BL.BusinessLogic
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw ErrorHandler.Handle(ex, this);
             }
         }
 
@@ -219,7 +219,7 @@ namespace BL.BusinessLogic
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw ErrorHandler.Handle(ex, this);
             }
         }
 
@@ -454,25 +454,29 @@ namespace BL.BusinessLogic
             return result;
         }
 
-        public void ImplementSuggestion(Suggestion suggestion, int buildingId)
+        public bool ImplementSuggestion(Suggestion suggestion, int buildingId)
         {
             try
             {
                 if ((int)suggestion.suggestionAction == 0 && (int)suggestion.suggestionEntity == 1)// add day
                 {
                     AddCleanupDay(suggestion.entityIds[0], buildingId);
+                    return true;
                 }
                 else if ((int)suggestion.suggestionAction == 0 && (int)suggestion.suggestionEntity == 0)// add bin
                 {
                     AddBin(suggestion.entityIds[0], buildingId);
+                    return true;
                 }
                 else if ((int)suggestion.suggestionAction == 1 && (int)suggestion.suggestionEntity == 1)// remove day
                 {
                     RemoveCleanupDay(suggestion.entityIds[0], buildingId);
+                    return true;
                 }
                 else if ((int)suggestion.suggestionAction == 1 && (int)suggestion.suggestionEntity == 0)// remove bin
                 {
                     RemoveBin(suggestion.entityIds[0], buildingId);
+                    return true;
                 }
                 else if ((int)suggestion.suggestionAction == 2 && (int)suggestion.suggestionEntity == 0)// change bins
                 {
@@ -488,13 +492,15 @@ namespace BL.BusinessLogic
                         {
                             AddBin(typeId, buildingId);
                         }
+                        return true;
                     }
                 
                 }
+                return false;
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw ErrorHandler.Handle(ex, this);
             }
         }
 
@@ -518,7 +524,7 @@ namespace BL.BusinessLogic
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw ErrorHandler.Handle(ex, this);
             }
         }
 
@@ -542,7 +548,7 @@ namespace BL.BusinessLogic
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw ErrorHandler.Handle(ex, this);
             }
         }
 
@@ -592,7 +598,7 @@ namespace BL.BusinessLogic
             }
             catch(Exception ex)
             {
-                throw ex;
+                throw ErrorHandler.Handle(ex, this);
             }
         }
 
@@ -615,7 +621,7 @@ namespace BL.BusinessLogic
             }
             catch(Exception ex)
             {
-                throw ex;
+                throw ErrorHandler.Handle(ex, this);
             }
         }
     }

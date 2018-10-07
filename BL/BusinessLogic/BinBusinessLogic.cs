@@ -79,7 +79,7 @@ namespace BL
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw ErrorHandler.Handle(ex, this);
             }
         }
 
