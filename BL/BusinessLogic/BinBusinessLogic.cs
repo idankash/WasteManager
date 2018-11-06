@@ -55,6 +55,46 @@ namespace BL
             }
         }
 
+        public void DeleteBinLogs(DateTime now)
+        {
+            try
+            {
+                List<BinLog> binLogs = this.db.BinLogs.Where(x => x.UpdateDate >= now).ToList();
+
+                foreach(BinLog binLog in binLogs)
+                {
+                    this.db.BinLogs.Remove(binLog);
+                }
+
+                this.db.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
+        public void DeleteWasteTransferLogs(DateTime now)
+        {
+            try
+            {
+                List<WasteTransferLog> wasteTransferLogs = this.db.WasteTransferLogs.Where(x => x.CreatedDate >= now).ToList();
+
+                foreach (WasteTransferLog wasteTransferLog in wasteTransferLogs)
+                {
+                    this.db.WasteTransferLogs.Remove(wasteTransferLog);
+                }
+
+                this.db.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
         public List<BinData> GetBinsByBuilding(int buildingId)
         {
             try

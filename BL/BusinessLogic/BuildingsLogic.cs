@@ -542,7 +542,6 @@ namespace BL.BusinessLogic
                 {
                     throw new Exception("There is no day with this id.");
                 }
-
                 building.LUT_Weekdays.Remove(weekday);
                 this.db.SaveChanges();
             }
@@ -606,7 +605,7 @@ namespace BL.BusinessLogic
         {
             try
             {
-                Bin bin = this.db.Bins.Where(x => x.BuildingId == buildingId && x.BinTypeId == binTypeId).SingleOrDefault();
+                Bin bin = this.db.Bins.Where(x => x.BuildingId == buildingId && x.BinTypeId == binTypeId).FirstOrDefault();
                 if (bin != null)
                 {
                     using (BinBusinessLogic binBusinessLogic = new BinBusinessLogic(this.db))

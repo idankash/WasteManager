@@ -37,7 +37,7 @@ namespace WasteSimulator
 
             Logger.Instance.WriteInfo("before call sql server", null);
 
-            WasteSimulator ws = new WasteSimulator(14);
+            WasteSimulator ws = new WasteSimulator(90);
 
             List<Bin> bins = ws.test();
 

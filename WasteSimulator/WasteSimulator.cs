@@ -17,7 +17,7 @@ namespace WasteSimulator
         public DateTime DestinationDateTime { get; set; }
         public DateTime SourceDateTime { get; set; }
 
-        Random rand = new Random();
+        Random rand = new Random(Guid.NewGuid().GetHashCode());
 
 
         public WasteSimulator()
@@ -38,9 +38,27 @@ namespace WasteSimulator
                 using (BinBusinessLogic bl = new BinBusinessLogic())
                 {
                     //List<Bin> bins = bl.GetAllBins(); error
+                    RemoveExistingRecordsForOverride();
                     FillAllBinsRandomly();
                     //return bins;
                     return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
+        private void RemoveExistingRecordsForOverride()
+        {
+            try
+            {
+                DateTime now = DateTime.Now;
+                using (BinBusinessLogic bl = new BinBusinessLogic())
+                {
+                    bl.DeleteBinLogs(now);
+                    bl.DeleteWasteTransferLogs(now);
                 }
             }
             catch (Exception ex)
@@ -105,7 +123,7 @@ namespace WasteSimulator
                         {
                             foreach (BinWithDays bin in binWithDays)
                             {
-                                if (rand.Next(0, 2) == 1) //Throw garbage or not
+                                if (rand.Next(1, 10) >3 ) //Throw garbage or not
                                 {
                                     bin.bin.currentCapacity += rand.Next(1, (int)(bin.bin.maxCapacity / (12*(7/bin.daysList.Count())))); //maxCapacity/(12*(7/numOfCleanups))
 
