@@ -692,6 +692,8 @@ namespace BL.BusinessLogic
                     }
 
                     building.LUT_Area = null; //Remove it from the area
+
+                    this.db.Buildings.Remove(building);
                     this.db.SaveChanges();
                 }
                 else

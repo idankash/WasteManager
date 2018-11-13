@@ -231,7 +231,7 @@ namespace WasteManagerWebApi.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpGet]
         public void DeleteBuilding(int buildingId)
         {
             try

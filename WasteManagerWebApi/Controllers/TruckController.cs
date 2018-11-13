@@ -83,7 +83,7 @@ namespace WasteManagerWebApi.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpGet]
         public void DeleteTruck(int truckId)
         {
             try

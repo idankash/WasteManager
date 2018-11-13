@@ -74,7 +74,7 @@ namespace WasteManagerWebApi.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpGet]
         public void DeleteBin(int binId)
         {
             try

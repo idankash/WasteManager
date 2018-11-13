@@ -197,6 +197,7 @@ namespace BL
             {
                 Truck truck = this.db.Trucks.Where(x => x.TruckId == truckId).SingleOrDefault();
                 truck.AreaId = null;
+                this.db.Trucks.Remove(truck); 
                 this.db.SaveChanges();
             }
             catch (Exception ex)
