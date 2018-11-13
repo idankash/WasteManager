@@ -21,6 +21,29 @@ namespace BL.BusinessLogic
 
         }
 
+        public DbBuilding AddBuilding(DbBuilding building)
+        {
+            try
+            {
+                Building newBuilding = new Building
+                {
+                    AreaId = building.areaId,
+                    StreetName = building.streetName,
+                    StreetNumber = building.streetNumber,
+                    TrashDisposalArea = building.trashDisposalArea                    
+                };
+
+                this.db.Buildings.Add(newBuilding);
+                this.db.SaveChanges();
+
+                return building;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public List<BuildingData> GetBuildings()
         {
             try
@@ -115,6 +138,26 @@ namespace BL.BusinessLogic
                 }
             }
             catch(Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
+        public double GetBuildingAreaDisposal(int buildingId)
+        {
+            try
+            {
+                double disposal = this.db.Buildings.Where(x => x.BuildingId == buildingId).Select(s => s.TrashDisposalArea).SingleOrDefault();
+                if(disposal > 0)
+                {
+                    return disposal;
+                }
+                else
+                {
+                    throw new Exception("There is no building with this id.");
+                }
+            }
+            catch (Exception ex)
             {
                 throw ErrorHandler.Handle(ex, this);
             }
@@ -619,6 +662,44 @@ namespace BL.BusinessLogic
                 }
             }
             catch(Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
+        public void DeleteBuilding(int buildingId) //Remove bins/weekday/areaid from the building
+        {
+            try
+            {
+                Building building = this.db.Buildings.Where(x => x.BuildingId == buildingId).SingleOrDefault();
+                
+                if(building != null)
+                {
+                    List<BinData> bins;
+                    using (BinBusinessLogic binBl= new BinBusinessLogic())
+                    {
+                        bins = binBl.GetAllBins().Where(x => x.buildingId == buildingId).ToList(); //Bins in the building
+                        foreach(BinData bin in bins) //Remove all bins from the building
+                        {
+                            binBl.DeleteBin(bin.binId);
+                        }
+                    }
+                    List<LUT_Weekdays> days = building.LUT_Weekdays.ToList();
+                    foreach (LUT_Weekdays day in days)
+                    {
+                        building.LUT_Weekdays.Remove(day);
+                        this.db.SaveChanges();
+                    }
+
+                    building.LUT_Area = null; //Remove it from the area
+                    this.db.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("There is no building with this id.");
+                }
+            }
+            catch (Exception ex)
             {
                 throw ErrorHandler.Handle(ex, this);
             }

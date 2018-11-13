@@ -54,12 +54,14 @@ namespace WasteSimulator
         {
             try
             {
+                Logger.Instance.WriteInfo("Deleting old logs.", this);
                 DateTime now = DateTime.Now;
                 using (BinBusinessLogic bl = new BinBusinessLogic())
                 {
                     bl.DeleteBinLogs(now);
                     bl.DeleteWasteTransferLogs(now);
                 }
+                Logger.Instance.WriteInfo("Old logs deleted. ", this);
             }
             catch (Exception ex)
             {
@@ -112,7 +114,14 @@ namespace WasteSimulator
                         {
                             if (bin.daysList.Contains(SourceDateTime.DayOfWeek.ToString())) // Check if its the right day for cleanup
                             {
-                                truckBl.ClearingBin(bin.bin, 1, SourceDateTime);
+                                int id = (int)truckBl.GetTruckIdByBuildingId((int)bin.bin.buildingId);
+                                TruckData truck = truckBl.GetTruck(id);
+                                if (truck.currentCapacity + bin.bin.currentCapacity >= truck.maxCapacity)
+                                {
+                                    truck.currentCapacity = 0;
+                                    truckBl.UpdateTruck(truck);
+                                }
+                                truckBl.ClearingBin(bin.bin, id, SourceDateTime);
                             }
                         }
                     }
@@ -123,7 +132,7 @@ namespace WasteSimulator
                         {
                             foreach (BinWithDays bin in binWithDays)
                             {
-                                if (rand.Next(1, 10) >3 ) //Throw garbage or not
+                                if (true)//(rand.Next(1, 10) >3 ) //Throw garbage or not
                                 {
                                     bin.bin.currentCapacity += rand.Next(1, (int)(bin.bin.maxCapacity / (12*(7/bin.daysList.Count())))); //maxCapacity/(12*(7/numOfCleanups))
 

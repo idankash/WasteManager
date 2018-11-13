@@ -43,6 +43,7 @@ namespace BL
                         maxCapacity = dbBin.Capacity,
                         streetAddress = dbBin.BuildingAddress,
                         binTrashDisposalArea = dbBin.BinTrashDisposalArea,
+                        buildingId = dbBin.BuildingId
                     };
 
                     bins.Add(binData);

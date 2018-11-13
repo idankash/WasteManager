@@ -47,6 +47,18 @@ namespace BL.BusinessLogic
             }
         }
 
+        public int GetAreaIdByBuilding(int buildingId)
+        {
+            try
+            {
+                return this.db.Buildings.Where(x => x.BuildingId == buildingId).SingleOrDefault().AreaId;
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
         public int GetNumberOfBuilding(int areaId)
         {
             try
@@ -151,8 +163,13 @@ namespace BL.BusinessLogic
                     buildingBins.Add(bin);
                 }
             }
-
-            List<WasteTransferLog> buildingWasteTransferLog = this.db.WasteTransferLogs.Where(x => x.CreatedDate >= lastThreeMonths).ToList(); //allWasteTransferLog from the last three months
+            List<WasteTransferLog> buildingWasteTransferLog;
+            using (TruckBusinessLogic truckBL = new TruckBusinessLogic())
+            {
+                int id = truckBL.GetTruckIdByAreaId(area.AreaId);
+                buildingWasteTransferLog = this.db.WasteTransferLogs.Where(x => x.CreatedDate >= lastThreeMonths && x.TruckId == id).ToList(); //allWasteTransferLog from the last three months
+            }
+             
 
             foreach (WasteTransferLog wtl in buildingWasteTransferLog) //doing it because linq problem with:.Where(x => x.CreatedDate >= lastThreeMonths && buildingBins.FindIndex(f => f.BinId == x.BinId) != -1).ToList(); 
             {
@@ -162,7 +179,7 @@ namespace BL.BusinessLogic
                 }
             }
 
-            return areaAvg = sumOfTrash / buildingWasteTransferLog.Count(); //sumOfTrash / number of cleanup(Log size)
+            return areaAvg = sumOfTrash / buildingWasteTransferLog.Count(); //sumOfTrash / number of cleanups(Log size)
         }
 
         public int GetNumOfCleanups(int truckId)
@@ -282,7 +299,7 @@ namespace BL.BusinessLogic
                         truckId = GetAreaTruckId(area.id)
                     };
 
-                    areaData.numOfCleanups = GetNumOfCleanups(areaData.truckId); //can I move it inside the block above?
+                    areaData.numOfCleanups = GetNumOfCleanups(areaData.truckId);
 
                     areasData.Add(areaData);
                 }

@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace BL.AtomicDataModels
 {
-    public class BuildingFullData
+    public class DbBuilding
     {
         public string streetName { get; set; }
         public string streetNumber { get; set; }
         public int buildingId { get; set; }
         public int areaId { get; set; }
-        public int numOfDays { get; set; }
-        public double binsArea { get; set; }
-        public double avgCapacity { get; set; }
+        public double trashDisposalArea { get; set; }
     }
 }

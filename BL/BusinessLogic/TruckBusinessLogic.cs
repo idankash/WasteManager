@@ -62,6 +62,47 @@ namespace BL
             }
         }
 
+        public int GetTruckIdByBuildingId(int buildingId)
+        {
+            try
+            {
+                using(LutLogic lutBl = new LutLogic(this.db))
+                {
+                    int areaId = lutBl.GetAreaIdByBuilding(buildingId);
+                    int ?id = this.db.Trucks.Where(x => x.AreaId == areaId).SingleOrDefault().AreaId;
+                    if (id != null)
+                    {
+                        return (int)id;
+                    }
+                    throw new Exception("There is no truck in this area.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
+        public int GetTruckIdByAreaId(int areaId)
+        {
+            try
+            {
+                using (LutLogic lutBl = new LutLogic(this.db))
+                {
+                    int? id = this.db.Trucks.Where(x => x.AreaId == areaId).SingleOrDefault().AreaId;
+                    if (id != null)
+                    {
+                        return (int)id;
+                    }
+                    throw new Exception("There is no truck in this area.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
         public List<TruckType> GetAllTypes()
         {
             try
@@ -263,17 +304,20 @@ namespace BL
         {
             List<spTruck_GetTruckListFullDetails_Result> dbTrucks = this.db.spTruck_GetTruckListFullDetails().ToList();
             spTruck_GetTruckListFullDetails_Result currentTruck = dbTrucks.Find(x => x.TruckId == truck.TruckId);
-            TruckData truckData = new TruckData()
+            using(BuildingsLogic buildingLogic = new BuildingsLogic())
             {
-                truckId = currentTruck.TruckId,
-                truckTypeId = currentTruck.TruckTypeId,
-                truckTypeDesc = currentTruck.TruckTypeDesc,
-                areaId = truck.AreaId!=null? currentTruck.AreaId : null,
-                areaDesc = truck.AreaId!=null? currentTruck.AreaDesc : null,
-                currentCapacity = currentTruck.CurrentCapacity,
-                maxCapacity = currentTruck.Capacity
-            };
-            return truckData;
+                TruckData truckData = new TruckData()
+                {
+                    truckId = currentTruck.TruckId,
+                    truckTypeId = currentTruck.TruckTypeId,
+                    truckTypeDesc = currentTruck.TruckTypeDesc,
+                    areaId = truck.AreaId != null ? truck.AreaId : null,
+                    areaDesc = truck.AreaId != null ? buildingLogic.GetAreaDesc((int)truck.AreaId): null,
+                    currentCapacity = currentTruck.CurrentCapacity,
+                    maxCapacity = currentTruck.Capacity
+                };
+                return truckData;
+            }
         }
 
         public struct TruckCleanUp//Need it for TruckAllocationToRegion
@@ -317,7 +361,7 @@ namespace BL
             try
             {
                 List<LUT_Area> listOfArea = this.db.LUT_Area.ToList();//List of area
-                List<Truck> truckList = this.db.Trucks.ToList(); //List of available trucks
+                List<Truck> truckList = this.db.Trucks.Where(x => x.AreaId == null).ToList(); //List of available trucks
                 List<TruckCleanUp> bestFit; //List to store the answer of TruckAllocationToRegion
                 List<LUT_TruckType> currentTruckTypes = new List<LUT_TruckType>(); //List of available truckType
                 Truck truckToUpdate;
@@ -325,9 +369,8 @@ namespace BL
 
                 foreach (LUT_Area area in listOfArea)//For each area we calculate the best truck and update its areaId
                 {
-                    bestFit = TruckAllocationToRegion(area);
+                    bestFit = TruckAllocationToRegion(area); //Best fit in relation to area
 
-                    //currentTruckTypes = this.db.LUT_TruckType.Where(x => truckList.FindIndex(f => f.TruckTypeId == x.TruckTypeId) != -1).ToList();//linq doesn't like FindIndex
                     List<LUT_TruckType> truckTypes = this.db.LUT_TruckType.ToList();//Same as the above statement
                     foreach (LUT_TruckType type in truckTypes)
                     {
@@ -340,7 +383,7 @@ namespace BL
                     TruckCleanUp bestTruck = bestFit.First();
                     foreach (TruckCleanUp truck in bestFit)//searching for the smallest truck with the lowest number of cleanups
                     {
-                        if (truckList.FindIndex(x => x.TruckTypeId == truck.typeId) != -1) //Checking for the best truck available
+                        if (truckList.FindIndex(x => x.TruckTypeId == truck.typeId) != -1) //Checking if the best truck available
                         {
                             if (truck.numOfCleanups < bestTruck.numOfCleanups) //Is available && better
                             {
@@ -357,15 +400,33 @@ namespace BL
                         return 0;
                     }
 
-                    indexOfbesttruck = truckList.FindIndex(x => x.TruckTypeId == bestTruck.typeId); //Getting the index of the truck we want to update
-                    truckToUpdate = truckList.ElementAt(indexOfbesttruck);
-                    truckList.RemoveAt(indexOfbesttruck); //Removing the best truck from the available list
+                    int areaTruckId = area.Trucks.First().TruckTypeId; //Each area has only one truck
+                    TruckCleanUp truckCleanUp = bestFit.Find(x => x.typeId == areaTruckId);
+                    if (bestTruck.typeId != areaTruckId) 
+                    {
+                        if (bestTruck.numOfCleanups < truckCleanUp.numOfCleanups || bestTruck.numOfCleanups == truckCleanUp.numOfCleanups && bestTruck.typeId < truckCleanUp.typeId) //Lower id === lower capacity
+                        {
+                            indexOfbesttruck = truckList.FindIndex(x => x.TruckTypeId == bestTruck.typeId); //Getting the index of the truck we want to update
+                            truckToUpdate = truckList.ElementAt(indexOfbesttruck);
+                            truckList.RemoveAt(indexOfbesttruck); //Remove the best truck from the available list
 
-                    truckToUpdate.AreaId = area.AreaId;
+                            truckToUpdate.AreaId = area.AreaId;
 
-                    TruckData truckData = DbTruckToTruckData(truckToUpdate);
-                    this.UpdateTruck(truckData); //Adding the right areaId
+                            TruckData truckData = DbTruckToTruckData(truckToUpdate);
+                            Truck oldTruck;
+                            oldTruck = this.db.Trucks.Where(x => x.AreaId == truckData.areaId).SingleOrDefault();
+                            if (oldTruck != null) //Remove old truck from area  
+                            {
+                                TruckData oldTruckData = DbTruckToTruckData(oldTruck);
+                                oldTruckData.areaDesc = null;
+                                oldTruckData.areaId = null;
+                                truckList.Add(oldTruck);// Adding the old truck to the available list
+                                UpdateTruck(oldTruckData);
+                            }
 
+                            this.UpdateTruck(truckData); //Adding the right areaId
+                        }
+                    }
                 }
 
                 return 1;
@@ -386,9 +447,19 @@ namespace BL
                     return 0;
                 }
 
+                Truck oldTruck;
                 TruckData truck;
                 foreach(AreaData area in updatedArea)
                 {
+                    oldTruck = this.db.Trucks.Where(x => x.AreaId == area.area.id).SingleOrDefault();
+                    if (oldTruck != null) //Remove old truck from area  
+                    {
+                        TruckData oldTruckData = DbTruckToTruckData(oldTruck);
+                        oldTruckData.areaDesc = null;
+                        oldTruckData.areaId = null;
+                        UpdateTruck(oldTruckData);
+                    }
+
                     truck = GetTruck(area.truckId);
                     truck.areaId = area.area.id;
                     truck.areaDesc = area.area.desc;

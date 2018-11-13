@@ -49,8 +49,44 @@ namespace WasteManagerWebApi.Controllers
             {
                 throw ex;
             }
-        }   
-        
+        }
+
+        [HttpGet]
+        public BuildingAreaManagementViewModel GetBuildingAreaManagementViewModel()
+        {
+            try
+            {
+                BuildingAreaManagementViewModel viewModel = new BuildingAreaManagementViewModel();
+                using (BuildingsLogic buildingLogic = new BuildingsLogic())
+                {
+                    List<BuildingData> buildings = buildingLogic.GetBuildings();
+                    viewModel.buildings = new List<DbBuilding>();
+                    foreach (BuildingData building in buildings)
+                    {
+                        viewModel.buildings.Add(new DbBuilding
+                        {
+                            areaId = building.areaId,
+                            buildingId = building.buildingId,
+                            streetName = building.streetName,
+                            streetNumber = building.streetNumber,
+                            trashDisposalArea = buildingLogic.GetBuildingAreaDisposal(building.buildingId)
+                        });
+                    }
+                }
+
+                using (LutLogic lutLogic = new LutLogic())
+                {
+                    viewModel.areas = lutLogic.GetLutArea();
+                }
+
+                return viewModel;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpGet]
         public string GetAreaDesc(int areaId)
         {
@@ -91,6 +127,22 @@ namespace WasteManagerWebApi.Controllers
                 using (BuildingsLogic buildingLogic = new BuildingsLogic())
                 {
                     return buildingLogic.GetBinsAreaDisposal(buildingId);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        public double GetBuildingAreaDisposal(int buildingId)
+        {
+            try
+            {
+                using (BuildingsLogic buildingLogic = new BuildingsLogic())
+                {
+                    return buildingLogic.GetBuildingAreaDisposal(buildingId);
                 }
             }
             catch (Exception ex)
@@ -171,6 +223,38 @@ namespace WasteManagerWebApi.Controllers
                 using (BuildingsLogic buildingLogic = new BuildingsLogic())
                 {
                     return buildingLogic.ImplementSuggestion(implementSuggestionData.suggestion, implementSuggestionData.buildingId);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpDelete]
+        public void DeleteBuilding(int buildingId)
+        {
+            try
+            {
+                using (BuildingsLogic buildingLogic = new BuildingsLogic())
+                {
+                    buildingLogic.DeleteBuilding(buildingId);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public DbBuilding AddBuilding([FromBody] DbBuilding building)
+        {
+            try
+            {
+                using (BuildingsLogic buildingLogic = new BuildingsLogic())
+                {
+                    return buildingLogic.AddBuilding(building);
                 }
             }
             catch (Exception ex)
