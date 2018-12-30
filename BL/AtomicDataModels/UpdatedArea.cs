@@ -6,18 +6,8 @@ using System.Threading.Tasks;
 
 namespace BL.AtomicDataModels
 {
-    public enum SuggestionAction
+    public class UpdatedArea
     {
-        add,
-        remove,
-        change,
-        nothing
+        public List<AreaData> updatedArea { get; set; }
     }
-
-    public enum SuggestionEntity
-    {
-        Bin,
-        Day
-    }
-
 }

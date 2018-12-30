@@ -49,14 +49,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AtomicDataModels\AreaData.cs" />
     <Compile Include="AtomicDataModels\BinData.cs" />
     <Compile Include="AtomicDataModels\BinType.cs" />
     <Compile Include="AtomicDataModels\BuildingData.cs" />
+    <Compile Include="AtomicDataModels\DbBuilding.cs" />
     <Compile Include="AtomicDataModels\Enums.cs" />
+    <Compile Include="AtomicDataModels\ImplementSuggestionData.cs" />
     <Compile Include="AtomicDataModels\LutItem.cs" />
     <Compile Include="AtomicDataModels\Suggestion.cs" />
     <Compile Include="AtomicDataModels\TruckData.cs" />
     <Compile Include="AtomicDataModels\TruckType.cs" />
+    <Compile Include="AtomicDataModels\UpdatedArea.cs" />
     <Compile Include="BusinessLogic\BaseBusinessLogic.cs" />
     <Compile Include="BusinessLogic\BinBusinessLogic.cs" />
     <Compile Include="BusinessLogic\BuildingsLogic.cs" />

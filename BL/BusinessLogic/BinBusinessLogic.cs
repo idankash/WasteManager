@@ -43,11 +43,80 @@ namespace BL
                         maxCapacity = dbBin.Capacity,
                         streetAddress = dbBin.BuildingAddress,
                         binTrashDisposalArea = dbBin.BinTrashDisposalArea,
+                        buildingId = dbBin.BuildingId
                     };
 
                     bins.Add(binData);
                 }
                 return bins;
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
+        public void DeleteBinLogs(DateTime now)
+        {
+            try
+            {
+                List<BinLog> binLogs = this.db.BinLogs.Where(x => x.UpdateDate >= now).ToList();
+
+                foreach(BinLog binLog in binLogs)
+                {
+                    this.db.BinLogs.Remove(binLog);
+                }
+
+                this.db.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
+        public void DeleteWasteTransferLogs(DateTime now)
+        {
+            try
+            {
+                List<WasteTransferLog> wasteTransferLogs = this.db.WasteTransferLogs.Where(x => x.CreatedDate >= now).ToList();
+
+                foreach (WasteTransferLog wasteTransferLog in wasteTransferLogs)
+                {
+                    this.db.WasteTransferLogs.Remove(wasteTransferLog);
+                }
+
+                this.db.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
+        public List<BinData> GetBinsByBuilding(int buildingId)
+        {
+            try
+            {
+                List<spBin_GetBinListFullDetails_Result> bins;
+                List<BinData> binsData = new List<BinData>();
+                Building building = this.db.Buildings.Where(x => x.BuildingId == buildingId).SingleOrDefault();
+                if(building != null)
+                {
+                    bins = this.db.spBin_GetBinListFullDetails().Where(x => x.BuildingId == buildingId).ToList();
+
+                    foreach (spBin_GetBinListFullDetails_Result bin in bins)
+                    {
+                        binsData.Add(DbBinToBinData(bin));
+                    }
+                    return binsData;
+                }
+                else
+                {
+                    throw new Exception("There is no building with this id.");
+                }
             }
             catch (Exception ex)
             {
@@ -75,7 +144,6 @@ namespace BL
 
                     binTypes.Add(binType);
                 }
-
                 return binTypes;
             }
             catch (Exception ex)
@@ -154,6 +222,29 @@ namespace BL
             }
         }
 
+        public void UpdateBin(Bin updatedBin, DateTime dt)//overloading
+        {
+            try
+            {
+                Bin oldBin = this.db.Bins.Where(x => x.BinId == updatedBin.BinId).SingleOrDefault();
+                if (oldBin == null)
+                {
+                    throw new Exception("Bin not found.");
+                }
+
+                oldBin.BinTypeId = updatedBin.BinTypeId;
+                oldBin.BuildingId = updatedBin.BuildingId;
+                oldBin.CurrentCapacity = updatedBin.CurrentCapacity;
+
+                AddNewBinLog(oldBin, dt);
+                this.db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
         private void AddNewBinLog(Bin updatedBin, DateTime dt)
         {
 
@@ -174,7 +265,7 @@ namespace BL
             }
         }
 
-        public void DeleteBin(int binId)
+        public void DeleteBin(int binId) //idan - changed method from deleting entire entity to remove buildingId from it.
         {
             try
             {
@@ -183,7 +274,8 @@ namespace BL
                 {
                     throw new Exception("Bin not found");
                 }
-                this.db.Bins.Remove(binToRemove);
+                binToRemove.CurrentCapacity = 0;
+                binToRemove.BuildingId = null;
                 this.db.SaveChanges();
             }
             catch (Exception ex)
@@ -199,17 +291,44 @@ namespace BL
             try
             {
                 bt = this.db.LUT_BinType.Where(x => x.BinTypeId == binTypeId).SingleOrDefault();
-                if (bt == null)
+                if (bt != null)
+                {
+                    return bt.Capacity;
+                }
+                else
                 {
                     throw new Exception("There isn't id like this in the system.");
                 }
+
+
             }
             catch (Exception ex)
             {
                 throw ErrorHandler.Handle(ex, this);
             }
+        }
 
-            return bt.Capacity;
+        public double GetbinTrashDisposalArea(int binTypeId)
+        {
+
+            try
+            {
+                LUT_BinType bt = this.db.LUT_BinType.Where(x => x.BinTypeId == binTypeId).SingleOrDefault();
+                if (bt != null)
+                {
+                    return bt.Capacity;
+                }
+                else
+                {
+                    throw new Exception("There isn't id like this in the system.");
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
         }
 
         public BinData DbBinToBinData(spBin_GetBinListFullDetails_Result dbBin)

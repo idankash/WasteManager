@@ -24,6 +24,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -133,15 +134,23 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\PreflightRequestsHandler.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AreaController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BinController.cs" />
+    <Compile Include="Controllers\BuildingController.cs" />
     <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="Controllers\TruckController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewDataModels\BinManagementViewModel.cs" />
+    <Compile Include="ViewDataModels\BuildingAreaManagementViewModel.cs" />
+    <Compile Include="ViewDataModels\EffectiveSchedulingViewModel.cs" />
+    <Compile Include="ViewDataModels\EfficientAllocationViewModel.cs" />
+    <Compile Include="ViewDataModels\TruckManagementViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

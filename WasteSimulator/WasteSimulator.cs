@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BL;
+using BL.AtomicDataModels;
+using BL.BusinessLogic;
 using DAL;
 using FND;
 
@@ -15,7 +17,7 @@ namespace WasteSimulator
         public DateTime DestinationDateTime { get; set; }
         public DateTime SourceDateTime { get; set; }
 
-        Random rand = new Random();
+        Random rand = new Random(Guid.NewGuid().GetHashCode());
 
 
         public WasteSimulator()
@@ -35,9 +37,9 @@ namespace WasteSimulator
             {
                 using (BinBusinessLogic bl = new BinBusinessLogic())
                 {
-                    //List<Bin> bins = bl.GetAllBins(); error
+                    
+                    RemoveExistingRecordsForOverride();
                     FillAllBinsRandomly();
-                    //return bins;
                     return null;
                 }
             }
@@ -47,43 +49,105 @@ namespace WasteSimulator
             }
         }
 
-        // $$ TODO IDAN BROKEN!
-        //      CYCLIC! 
-        //      Overload binBl.UpdateBin to the simulator's needs.
+        private void RemoveExistingRecordsForOverride()
+        {
+            try
+            {
+                Logger.Instance.WriteInfo("Deleting old logs.", this);
+                DateTime now = DateTime.Now;
+                using (BinBusinessLogic bl = new BinBusinessLogic())
+                {
+                    bl.DeleteBinLogs(now);
+                    bl.DeleteWasteTransferLogs(now);
+                }
+                Logger.Instance.WriteInfo("Old logs deleted. ", this);
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
+        }
+
+        public class BinWithDays//Need it for TruckAllocationToRegion
+        {
+            public BinData bin { get; set; }
+            public List<string> daysList { get; set; }// List of cleanup days
+        }
+
         public void FillAllBinsRandomly()
         {
-            //    List<Bin> binList;
+            try
+            {
+                List<BinWithDays> binWithDays = new List<BinWithDays>();
 
-            //    while ((Convert.ToBoolean(SourceDateTime.Date.CompareTo(DestinationDateTime.Date))))
-            //    {
-            //        Logger.Instance.WriteInfo("Current date " + SourceDateTime.ToString(), this);
-            //        using (BinBusinessLogic bl = new BinBusinessLogic())
-            //        {
-            //            binList = null;//bl.GetAllBins(); error
+                using (BinBusinessLogic bl = new BinBusinessLogic())
+                {
+                    List<BinData> binsData = bl.GetAllBins();
+                    binsData.RemoveAll(x => x.buildingId == null); // Not in used
 
-            //            for (int i = 0; i < 12; i++)
-            //            {
-            //                // It means the client want to throw his garbage.. 
+                    foreach(BinData bin in binsData)
+                    {
+                        binWithDays.Add(new BinWithDays
+                        {
+                            bin = bin, 
+                            daysList = null
+                        });
+                    }
+                }
 
-            //                foreach (Bin bin in binList)
-            //                {
-            //                    if (rand.Next(0, 2) == 1)
-            //                    {
-            //                        int maxWaste = (int)bl.GetMaxCapacityByBinType(bin.BinTypeId);
-            //                        bin.CurrentCapacity += rand.Next(1, maxWaste / 12);
+                using (BuildingsLogic bl = new BuildingsLogic()) // Add for each bin its cleanup days 
+                {
+                    foreach(BinWithDays bin in binWithDays)
+                    {
+                        bin.daysList = bl.GetDaysOfCleanups(bin.bin.buildingId);
+                    }
+                }
 
-            //                        bl.UpdateBin(bl.DbBinToBinData(bin), SourceDateTime);
-            //                    }
-            //                }
 
-            //                SourceDateTime = SourceDateTime.AddHours(2);
-            //            }
-            //        }
-            //        using (TruckBusinessLogic truckBl = new TruckBusinessLogic())
-            //        {
-            //            truckBl.ClearingBins(binList, 1, SourceDateTime);
-            //        }
-            //    }
+                while ((Convert.ToBoolean(SourceDateTime.Date.CompareTo(DestinationDateTime.Date)))) // Run until you reach DestinationDateTime  
+                { //Do stuff each day
+                    Logger.Instance.WriteInfo("Current date " + SourceDateTime.ToString(), this);
+                    using (TruckBusinessLogic truckBl = new TruckBusinessLogic()) //Cleaning bins
+                    {
+                        foreach (BinWithDays bin in binWithDays)
+                        {
+                            if (bin.daysList.Contains(SourceDateTime.DayOfWeek.ToString())) // Check if its the right day for cleanup
+                            {
+                                int id = (int)truckBl.GetTruckIdByBuildingId((int)bin.bin.buildingId);
+                                TruckData truck = truckBl.GetTruck(id);
+                                if (truck.currentCapacity + bin.bin.currentCapacity >= truck.maxCapacity)
+                                {
+                                    truck.currentCapacity = 0;
+                                    truckBl.UpdateTruck(truck);
+                                }
+                                truckBl.ClearingBin(bin.bin, id, SourceDateTime);
+                            }
+                        }
+                    }
+
+                    using (BinBusinessLogic bl = new BinBusinessLogic()) //Filling bins
+                    {
+                        for(int i = 0; i < 12; i++) //24 hours a day / 2 = 12
+                        {
+                            foreach (BinWithDays bin in binWithDays)
+                            {
+                                if (true)//(rand.Next(1, 10) >3 ) //Throw garbage or not
+                                {
+                                    bin.bin.currentCapacity += rand.Next(1, (int)(bin.bin.maxCapacity / (12*(7/bin.daysList.Count())))); //maxCapacity/(12*(7/numOfCleanups))
+
+                                    bl.UpdateBin(bin.bin, SourceDateTime);
+                                }
+                            }
+                            SourceDateTime = SourceDateTime.AddHours(2); //2 hours jump
+                        }
+                    }
+                    
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ErrorHandler.Handle(ex, this);
+            }
         }
     }
 }

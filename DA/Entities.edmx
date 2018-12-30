@@ -33,8 +33,6 @@
           <Property Name="TrashDisposalArea" Type="float" Nullable="false" />
           <Property Name="AreaId" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'WasteManager.dbo.BuildingWasteTransferWeekdays' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BuildingWasteTransferWeekdays">
           <Key>
             <PropertyRef Name="BuildingId" />
@@ -222,18 +220,13 @@ warning 6002: The table/view 'WasteManager.dbo.BuildingWasteTransferWeekdays' do
           <EntitySet Name="Bin" EntityType="Self.Bin" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BinLog" EntityType="Self.BinLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Building" EntityType="Self.Building" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BuildingWasteTransferWeekdays" EntityType="Self.BuildingWasteTransferWeekdays" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LUT_Area" EntityType="Self.LUT_Area" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LUT_BinType" EntityType="Self.LUT_BinType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LUT_TruckType" EntityType="Self.LUT_TruckType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LUT_Weekdays" EntityType="Self.LUT_Weekdays" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Truck" EntityType="Self.Truck" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WasteTransferLog" EntityType="Self.WasteTransferLog" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="BuildingWasteTransferWeekdays" EntityType="Self.BuildingWasteTransferWeekdays" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [BuildingWasteTransferWeekdays].[BuildingId] AS [BuildingId], 
-    [BuildingWasteTransferWeekdays].[WasteTransferWeekdayId] AS [WasteTransferWeekdayId]
-    FROM [dbo].[BuildingWasteTransferWeekdays] AS [BuildingWasteTransferWeekdays]</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="FK_Bin_BinLog#BinId" Association="Self.FK_Bin_BinLog#BinId">
             <End Role="Bin" EntitySet="Bin" />
             <End Role="BinLog" EntitySet="BinLog" />
@@ -328,7 +321,7 @@ warning 6002: The table/view 'WasteManager.dbo.BuildingWasteTransferWeekdays' do
           </AssociationSet>
           <FunctionImport Name="spTruck_GetTruckListFullDetails" ReturnType="Collection(WasteManagerModel.spTruck_GetTruckListFullDetails_Result)" />
           <FunctionImport Name="spBin_GetSingleBinFullDetails" ReturnType="Collection(WasteManagerModel.spBin_GetSingleBinFullDetails_Result)">
-            <Parameter Name="binId" Mode="In" Type="Int32" />
+          <Parameter Name="binId" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="BinLog">
@@ -545,7 +538,7 @@ warning 6002: The table/view 'WasteManager.dbo.BuildingWasteTransferWeekdays' do
           <Property Type="String" Name="TruckTypeDesc" Nullable="false" MaxLength="100" />
           <Property Type="Double" Name="CurrentCapacity" Nullable="false" />
           <Property Type="Int32" Name="AreaId" Nullable="true" />
-          <Property Type="String" Name="AreaDesc" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="AreaDesc" Nullable="true" MaxLength="50" />
           <Property Type="Double" Name="Capacity" Nullable="false" />
         </ComplexType>
         <ComplexType Name="spBin_GetSingleBinFullDetails_Result">
