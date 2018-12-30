@@ -171,7 +171,7 @@ namespace BL.BusinessLogic
             }
              
 
-            foreach (WasteTransferLog wtl in buildingWasteTransferLog) //doing it because linq problem with:.Where(x => x.CreatedDate >= lastThreeMonths && buildingBins.FindIndex(f => f.BinId == x.BinId) != -1).ToList(); 
+            foreach (WasteTransferLog wtl in buildingWasteTransferLog)
             {
                 if (buildingBins.FindIndex(x => x.BinId == wtl.BinId) != -1)
                 {

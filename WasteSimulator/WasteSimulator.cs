@@ -37,10 +37,9 @@ namespace WasteSimulator
             {
                 using (BinBusinessLogic bl = new BinBusinessLogic())
                 {
-                    //List<Bin> bins = bl.GetAllBins(); error
+                    
                     RemoveExistingRecordsForOverride();
                     FillAllBinsRandomly();
-                    //return bins;
                     return null;
                 }
             }

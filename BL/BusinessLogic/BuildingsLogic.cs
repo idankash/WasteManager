@@ -181,7 +181,7 @@ namespace BL.BusinessLogic
 
                     allgWasteTransferLog = this.db.WasteTransferLogs.Where(x => x.CreatedDate >= lastThreeMonths).ToList(); //allWasteTransferLog from the last three months
 
-                    foreach (WasteTransferLog wtl in allgWasteTransferLog) //!!!doing it because linq problem with:.Where(x => x.CreatedDate >= lastThreeMonths && buildingBins.FindIndex(f => f.BinId == x.BinId) != -1).ToList(); 
+                    foreach (WasteTransferLog wtl in allgWasteTransferLog) 
                     {
                        if(buildingBins.FindIndex(x => x.BinId == wtl.BinId) != -1)
                         {
@@ -286,7 +286,7 @@ namespace BL.BusinessLogic
 
                 allgWasteTransferLog = this.db.WasteTransferLogs.Where(x => x.CreatedDate >= lastThreeMonths).ToList(); //allWasteTransferLog from the last three months
 
-                foreach (WasteTransferLog wtl in allgWasteTransferLog) //doing it because linq problem with:.Where(x => x.CreatedDate >= lastThreeMonths && buildingBins.FindIndex(f => f.BinId == x.BinId) != -1).ToList(); 
+                foreach (WasteTransferLog wtl in allgWasteTransferLog) 
                 {
                     if (buildingBins.FindIndex(x => x.BinId == wtl.BinId) != -1)
                     {
@@ -354,11 +354,7 @@ namespace BL.BusinessLogic
                             }
                         }
                         //if we are here we have to replace bin
-                        //List<int> binTypeId = this.db.LUT_BinType //linq doesn't like FindIndex
-                        //                             .Where(x => buildingBins.FindIndex(f => f.BinTypeId == x.BinTypeId) != -1)
-                        //                             .Select(x => x.BinTypeId).ToList();
-
-                        List<LUT_BinType> binTypes = this.db.LUT_BinType.ToList(); //Same as the above statement
+                        List<LUT_BinType> binTypes = this.db.LUT_BinType.ToList();
                         List<int> binTypeId = new List<int>();
                         foreach(LUT_BinType binType in binTypes)
                         {
@@ -422,12 +418,8 @@ namespace BL.BusinessLogic
                     }
                     else //remove the smallest bin
                     {
-                        // List<LUT_BinType> buildingBinTypeList = this.db.LUT_BinType //linq doesn't like FindIndex
-                        //                                             .Where(x => buildingBins.FindIndex(f => f.BinTypeId == x.BinTypeId) != -1).ToList(); 
-
-
-                        List<LUT_BinType> buildingBinTypeList = new List<LUT_BinType>(); //Same as the above statement
-                        List<LUT_BinType> allbuildingBinTypeList = this.db.LUT_BinType.ToList(); //Same as the above statement
+                        List<LUT_BinType> buildingBinTypeList = new List<LUT_BinType>(); 
+                        List<LUT_BinType> allbuildingBinTypeList = this.db.LUT_BinType.ToList();
 
                         foreach (LUT_BinType binType in allbuildingBinTypeList)
                         {
@@ -571,7 +563,7 @@ namespace BL.BusinessLogic
             }
         }
 
-        public void RemoveCleanupDay(int dayId, int buildingId) //!!! 'Unable to update the EntitySet 'BuildingWasteTransferWeekdays' because it has a DefiningQuery and no <DeleteFunction> element exists in the <ModificationFunctionMapping> element to support the current operation.'
+        public void RemoveCleanupDay(int dayId, int buildingId) 
         {
             try
             {
@@ -594,7 +586,7 @@ namespace BL.BusinessLogic
             }
         }
 
-        public void AddBin(int binTypeId, int buildingId)// Asign old bin, if no exist Creating new and asign it to the building
+        public void AddBin(int binTypeId, int buildingId)// Asign old bin, if no exist Creating new one and asign it to the building
         {
             try
             {
